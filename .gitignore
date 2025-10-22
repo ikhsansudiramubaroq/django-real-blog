@@ -11,11 +11,11 @@ __pycache__/          # Folder cache hasil kompilasi Python (.pyc), tidak perlu 
 # Virtual environment
 venv/                 # Folder environment virtual (biasa)
 env/                  # Nama environment alternatif
-myenv/                # Ini environment kamu sekarang → perlu diabaikan juga biar tidak ke-upload ke GitHub
+myvenv/                # Ini environment kamu sekarang → perlu diabaikan juga biar tidak ke-upload ke GitHub
 
 # Django stuff
 db.sqlite3            # Database SQLite lokal, tidak perlu di-commit
-staticfiles/          # Folder hasil collectstatic (build output), akan digenerate ulang di server
+static/          # Folder hasil collectstatic (build output), akan digenerate ulang di server
 media/                # Folder berisi upload user (gambar blog, profil, dll), jangan di-upload ke publik
 *.pot                 # File terjemahan template Django
 *.pyc                 # File Python cache tambahan
