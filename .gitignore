@@ -18,7 +18,8 @@ db.sqlite3            # Database SQLite lokal, tidak perlu di-commit
 static/          # Folder hasil collectstatic (build output), akan digenerate ulang di server
 media/                # Folder berisi upload user (gambar blog, profil, dll), jangan di-upload ke publik
 *.pot                 # File terjemahan template Django
-*.pyc                 # File Python cache tambahan
+*.pyc                 # File Pytho
+n cache tambahan
 
 # Secrets and environment variables
 .env                  # File berisi password, secret key, dan konfigurasi rahasia
