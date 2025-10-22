@@ -1,0 +1,43 @@
+{% load static %}
+<!-- Footer -->
+    <footer class="text-center">
+        <div class="container">
+            <p>© 2025 Pastel Blog. Made with ❤️ using Bootstrap 5</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="{% static "vendor/js/bootstrap.bundle.js" %}"></script>
+    
+    <!-- AOS JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    
+    <!-- Swiper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.7/swiper-bundle.min.js"></script>
+    
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+
+        // Initialize Swiper
+        var swiper = new Swiper(".heroSwiper", {
+            spaceBetween: 0,
+            effect: "fade",
+            loop: true,
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+        });
+    </script>

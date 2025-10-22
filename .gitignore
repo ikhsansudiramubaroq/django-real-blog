@@ -1,0 +1,34 @@
+# Python
+__pycache__/          # Folder cache hasil kompilasi Python (.pyc), tidak perlu di-upload
+*.py[cod]             # File .pyc/.pyo/.pyd hasil kompilasi juga diabaikan
+*.pyo                 # File Python optimized bytecode (jarang dipakai)
+*.pyd                 # File Python dynamic module (Windows)
+*.so                  # File library C (Linux/macOS)
+*.egg                 # Paket Python lama (format .egg)
+*.egg-info/           # Metadata paket Python, dihasilkan otomatis oleh pip
+*.log                 # File log (biasanya dari error), bersifat sementara
+
+# Virtual environment
+venv/                 # Folder environment virtual (biasa)
+env/                  # Nama environment alternatif
+myenv/                # Ini environment kamu sekarang → perlu diabaikan juga biar tidak ke-upload ke GitHub
+
+# Django stuff
+db.sqlite3            # Database SQLite lokal, tidak perlu di-commit
+staticfiles/          # Folder hasil collectstatic (build output), akan digenerate ulang di server
+media/                # Folder berisi upload user (gambar blog, profil, dll), jangan di-upload ke publik
+*.pot                 # File terjemahan template Django
+*.pyc                 # File Python cache tambahan
+
+# Secrets and environment variables
+.env                  # File berisi password, secret key, dan konfigurasi rahasia
+*.env                 # Untuk jaga-jaga jika ada file env lain (misal .dev.env)
+
+# IDE / editor settings
+.vscode/              # Pengaturan VS Code (lokal)
+.idea/                # Pengaturan PyCharm (lokal)
+*.swp                 # File temporary dari Vim
+.DS_Store             # File metadata macOS, tidak perlu
+
+# OS junk files
+Thumbs.db             # File thumbnail Windows Explorer, tidak perlu
