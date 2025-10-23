@@ -136,4 +136,11 @@ STATICFILES_DIRS = [BASE_DIR / 'static'  # Path folder static utama di root proj
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR / 'media')
 
+# URL tujuan setelah login dan logout berhasil (redirect ke halaman index di app blog)
+LOGIN_REDIRECT_URL = 'blog:blog_index'
+LOGOUT_REDIRECT_URL = 'accounts:index'
+
+# custom user
+AUTH_USER_MODEL = 'accounts.User'
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

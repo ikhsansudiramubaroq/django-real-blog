@@ -2,31 +2,11 @@
 {% load static %}
 
 
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pastel Blog - Modern Multi-Author Blog Template</title>
-    
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- AOS Animation CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
-    
-    <!-- Swiper CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.7/swiper-bundle.min.css" rel="stylesheet">
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="css/style.css">
-    
-</head>
-<body>
-
     {% block content %}
+
+    {% comment %} navbar {% endcomment %}
+    {% include "blog/partials/navbar.html" %}
+    {% comment %} end navbar {% endcomment %}
     <!-- Hero Slider -->
     <section class="hero-section">
         <div class="swiper heroSwiper">
@@ -35,8 +15,10 @@
                     <div class="hero-content text-center">
                         <h1 data-aos="fade-up">Welcome to Pastel Blog</h1>
                         <p data-aos="fade-up" data-aos-delay="100">Discover amazing stories and insights</p>
-                        <div class="hero-buttons d-flex flex-wrap gap-3 justify-content-center" data-aos="fade-up" data-aos-delay="200">
-                            <a href="login.html" class="btn btn-auth btn-auth-primary">Get Started</a>
+                        <div class="hero-buttons d-flex flex-wrap gap-3 justify-content-center" data-aos="fade-up" data-aos-delay="100">
+                            {% comment %} <a href="login.html" class="btn btn-auth btn-auth-primary">Get Started</a>
+                            <a href="contact.html" class="btn btn-login">Contact Us</a> {% endcomment %}
+                            <a href="login.html" class="btn btn-auth btn-auth-secondary">Get Started</a>
                             <a href="contact.html" class="btn btn-login">Contact Us</a>
                         </div>
                     </div>
@@ -45,9 +27,9 @@
                     <div class="hero-content">
                         <h1 data-aos="fade-up">Learn & Grow Together</h1>
                         <p data-aos="fade-up" data-aos-delay="100">Join our community of writers and readers</p>
-                        <div class="hero-buttons" data-aos="fade-up" data-aos-delay="200">
-                            <a href="register.html" class="btn btn-auth btn-auth-primary me-3 mb-2">Join Now</a>
-                            <a href="index.html#articles" class="btn btn-login mb-2">Explore Articles</a>
+                        <div class="hero-buttons d-flex flex-wrap gap-3 justify-content-center" data-aos="fade-up" data-aos-delay="100">
+                            <a href="register.html" class="btn btn-auth btn-auth-secondary">Join Now</a>
+                            <a href="contact.html" class="btn btn-login">Explore Articles</a>
                         </div>
                     </div>
                 </div>
@@ -55,9 +37,9 @@
                     <div class="hero-content">
                         <h1 data-aos="fade-up">Share Your Story</h1>
                         <p data-aos="fade-up" data-aos-delay="100">Start writing and inspire others</p>
-                        <div class="hero-buttons" data-aos="fade-up" data-aos-delay="200">
-                            <a href="login.html" class="btn btn-auth btn-auth-secondary me-3 mb-2">Write for Us</a>
-                            <a href="index.html#featured" class="btn btn-login mb-2">Featured Posts</a>
+                        <div class="hero-buttons d-flex flex-wrap gap-3 justify-content-center" data-aos="fade-up" data-aos-delay="100">
+                            <a href="register.html" class="btn btn-auth btn-auth-secondary">Write For Us</a>
+                            <a href="contact.html" class="btn btn-login">Featured Posts</a>
                         </div>
                     </div>
                 </div>
@@ -66,6 +48,7 @@
         </div>
     </section>
 
+    <h2> {{ request.user.nama }} </h2>
     <!-- Featured Articles Section -->
     <section class="article-section" id="featured">
         <div class="container">

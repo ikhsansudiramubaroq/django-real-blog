@@ -12,6 +12,7 @@ __pycache__/          # Folder cache hasil kompilasi Python (.pyc), tidak perlu 
 venv/                 # Folder environment virtual (biasa)
 env/                  # Nama environment alternatif
 myvenv/                # Ini environment kamu sekarang → perlu diabaikan juga biar tidak ke-upload ke GitHub
+catatan_alur_app.txt
 
 # Django stuff
 db.sqlite3            # Database SQLite lokal, tidak perlu di-commit

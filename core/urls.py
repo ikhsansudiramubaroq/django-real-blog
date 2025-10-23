@@ -22,6 +22,6 @@ from django.conf.urls.static import static #untuk fungsi import url static
 urlpatterns = [
     path('', include('blog.urls')),
     # path('author/', include('author.urls')),
-    # path('accounts/', include('accounts.urls')),
+    path('accounts/', include('accounts.urls')),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) #fungsi untuk load file media seperti gambar dll
