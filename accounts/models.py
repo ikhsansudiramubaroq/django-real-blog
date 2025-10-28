@@ -43,6 +43,10 @@ class UserManager(BaseUserManager):
         
         return user
 
+# NOTED:
+# Dengan kata lain: Model (AbstractBaseUser/User) menentukan APA isinya, 
+# sementara Manager (BaseUserManager) menentukan BAGAIMANA isinya dibuat dan diatur.
+
 # Create your models here.
 class User(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = (
@@ -51,6 +55,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     
     nama = models.CharField(max_length=100)
+    job = models.CharField(max_length=50)
     tempat_lahir = models.CharField(max_length=50)
     tanggal_lahir = models.DateTimeField(blank=True, default=timezone.now)
     email = models.EmailField(unique=True, blank=True)

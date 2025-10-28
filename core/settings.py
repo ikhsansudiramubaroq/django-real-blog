@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     
     'blog',
     'accounts',
-    'author'
+    'author',
+    'taggit',
 ]
 
 MIDDLEWARE = [
@@ -100,6 +101,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        # 'OPTIONS': {
+        #     'min_length' : 6,
+        #     'code' : 'password_min_length',
+        #     'message' : 'Kata sandi minimal 6 karakter !',
+        # },
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',

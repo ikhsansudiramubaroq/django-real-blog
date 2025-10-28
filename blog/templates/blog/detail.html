@@ -1,108 +1,52 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panduan Lengkap Memulai Blog di 2025 - Pastel Blog</title>
-    
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- AOS Animation CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Copy semua CSS dari index.html di sini -->
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
+{% extends "base.html" %}
+{% load static %}
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
-        <div class="container">
-            <a class="navbar-brand" href="index.html">
-                <span class="brand-pastel">Pastel</span><span class="brand-blog">Blog</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Blog</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contact.html">Contact</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
 
+    {% block content %}
+
+    {% comment %} navbar {% endcomment %}
+    {% include "blog/partials/navbar.html" %}
+    {% comment %} end navbar {% endcomment %}
     <!-- Detail Content -->
     <section class="py-5">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8">
                     
-                    <img src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=1200&h=500&fit=crop" class="detail-hero" alt="Detail Artikel">
+                    <img src="{{ detail_post.images_post.url }}" class="detail-hero" alt="Detail Artikel">
                     
                     <div class="detail-meta">
-                        <a href="category.html?category=Tutorial" class="badge-category text-decoration-none">Tutorial</a>
-                        <span class="article-date">📅 15 Oktober 2025</span>
+                        <a href="category.html?category=Tutorial" class="badge-category text-decoration-none">{{ detail_post.category }}</a>
+                        <span class="article-date">{{ detail_post.publish }}</span>
                         <div class="article-views ms-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
                                 <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
                                 <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
                             </svg>
-                            <span class="ms-1">1.2K views</span>
+                            <span class="ms-1">{{ detail_post.views }}</span>
                         </div>
                     </div>
                     
-                    <h1 class="detail-title">Panduan Lengkap Memulai Blog di 2025</h1>
+                    <h1 class="detail-title">{{ detail_post.title_post }}</h1>
                     
                     <div class="article-tags mb-4">
                         <span class="me-2">Tags:</span>
-                        <a href="tag.html?tag=Tips" class="badge bg-light text-dark text-decoration-none me-1">Tips</a>
-                        <a href="tag.html?tag=Blogging" class="badge bg-light text-dark text-decoration-none me-1">Blogging</a>
-                        <a href="tag.html?tag=Digital" class="badge bg-light text-dark text-decoration-none me-1">Digital</a>
-                        <a href="tag.html?tag=Strategy" class="badge bg-light text-dark text-decoration-none me-1">Strategy</a>
+                        {% for tags in tag  %}
+                        <a href="tag.html?tag=Tips" class="badge bg-light text-dark text-decoration-none me-1">{{tags}}</a>
+                        {% endfor %}
                     </div>
                     
                     <div class="author-card">
                         <img src="https://i.pravatar.cc/150?img=1" class="author-card-avatar" alt="Sarah Johnson">
                         <div class="author-card-info flex-grow-1">
-                            <h5>Sarah Johnson</h5>
-                            <p>Content Writer & Blogger</p>
+                            <h5>{{ detail_post.user.nama }}</h5>
+                            <p>{{ detail_post.user.job }}</p>
                         </div>
                         <a href="author.html" class="btn-view-profile">View Profile</a>
                     </div>
                     
                     <div class="article-content">
-                        <p class="lead">Memulai blog di tahun 2025 membutuhkan strategi yang tepat. Dengan perkembangan teknologi AI dan perubahan algoritma search engine, blogger perlu beradaptasi dengan cepat untuk tetap relevan.</p>
-                        
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                        
-                        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                        
-                        <h3>Langkah-Langkah Memulai Blog</h3>
-                        
-                        <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-                        
-                        <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet.</p>
-                        
-                        <h3>Tips Sukses untuk Blogger Pemula</h3>
-                        
-                        <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.</p>
-                        
-                        <p>Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit.</p>
-                        
-                        <p>Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus.</p>
+                        <p class="lead">{{ detail_post.fill }}</p>
                     </div>
                     
                     <div class="comments-section">
@@ -279,34 +223,5 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="text-center">
-        <div class="container">
-            <p>© 2025 Pastel Blog. Made with ❤️ using Bootstrap 5</p>
-        </div>
-    </footer>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- AOS JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    
-    <script>
-        // Initialize AOS
-        AOS.init({
-            duration: 800,
-            once: true
-        });
-
-        // Simulasi status login (ubah ke true untuk melihat form comment)
-        const isLoggedIn = false;
-        
-        if (isLoggedIn) {
-            document.getElementById('loginPrompt').style.display = 'none';
-            document.getElementById('commentForm').style.display = 'block';
-        }
-    </script>
-
-</body>
-</html>
+    {% endblock content %}
+    {% include "partials/footer.html" %}

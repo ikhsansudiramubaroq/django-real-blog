@@ -10,8 +10,8 @@ app_name = 'accounts'
 urlpatterns = [
     path('', views.index_profile, name='index'), #untuk profile
     # path('accounts/update_profiles', views.update_profiles, name='update_profiles'),
-    path('login/',LoginView.as_view(template_name='registration/login.html'), name='login'),
-    # path('logout/', views.LogoutView, name='logout'),
+    path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
+    path('logout/', views.logout, name='logout'),
     path('register/', views.register_user, name='register'),
     # path('password_reset/', PasswordResetView.as_view(template_name= "registration/password_reset_form.html"), 
     # name='password_reset'),

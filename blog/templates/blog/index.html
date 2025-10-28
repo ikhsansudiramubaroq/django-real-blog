@@ -16,8 +16,6 @@
                         <h1 data-aos="fade-up">Welcome to Pastel Blog</h1>
                         <p data-aos="fade-up" data-aos-delay="100">Discover amazing stories and insights</p>
                         <div class="hero-buttons d-flex flex-wrap gap-3 justify-content-center" data-aos="fade-up" data-aos-delay="100">
-                            {% comment %} <a href="login.html" class="btn btn-auth btn-auth-primary">Get Started</a>
-                            <a href="contact.html" class="btn btn-login">Contact Us</a> {% endcomment %}
                             <a href="login.html" class="btn btn-auth btn-auth-secondary">Get Started</a>
                             <a href="contact.html" class="btn btn-login">Contact Us</a>
                         </div>
@@ -59,168 +57,35 @@
                     <!-- Article Grid - 2 Columns -->
                     <div class="row">
                         <!-- Article Card 1 -->
+                        {% for post in get_post  %}
                         <div class="col-md-6 mb-4" data-aos="fade-up">
                             <div class="article-card">
                                 <div class="position-relative">
-                                    <img src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=600&h=300&fit=crop" class="article-img" alt="Article">
-                                    <span class="badge-category position-absolute top-0 start-0 m-3">Tutorial</span>
+                                    <img src="{{ post.images_post.url }}" class="article-img" alt="Article">
+                                    <span class="badge-category position-absolute top-0 start-0 m-3">{{post.category}}</span>
                                 </div>
                                 <div class="article-body">
                                     <div class="article-meta d-flex justify-content-between align-items-center">
-                                        <span class="article-date">15 Oktober 2025</span>
+                                        <span class="article-date">{{post.publish}}</span>
                                         <div class="author-info">
-                                            <img src="https://i.pravatar.cc/150?img=1" class="author-avatar" alt="Sarah Johnson" width="25" height="25">
+                                            <img src="{{ post.user.img_user.url }}" class="author-avatar" alt="Sarah Johnson" width="25" height="25">
                                         </div>
                                     </div>
-                                    <h3 class="article-title">Panduan Lengkap Memulai Blog di 2025</h3>
-                                    <p class="article-excerpt">Pelajari langkah-langkah praktis untuk memulai blog yang sukses dengan tips dan trik terbaru dari para ahli.</p>
+                                    <h3 class="article-title">{{post.title_post}}</h3>
+                                    <p class="article-excerpt">{{post.fill}}</p>
                                     <div class="article-footer d-flex justify-content-between align-items-center">
-                                        <a href="detail.html" class="btn-read-more">Read More</a>
+                                        <a href="{% url 'blog:detail_post' post.slug_post %}" class="btn-read-more">Read More</a>
                                         <div class="article-tags">
-                                            <span class="badge bg-light text-dark me-1">Tips</span>
-                                            <span class="badge bg-light text-dark">Blogging</span>
+                                            {% for tag in post.tags.all  %}
+                                                <span class="badge bg-light text-dark me-1">{{tag}}</span>
+                                            {% endfor %}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Article Card 2 -->
-                        <div class="col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
-                            <div class="article-card">
-                                <div class="position-relative">
-                                    <img src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=600&h=300&fit=crop" class="article-img" alt="Article">
-                                    <span class="badge-category position-absolute top-0 start-0 m-3">Productivity</span>
-                                </div>
-                                <div class="article-body">
-                                    <div class="article-meta d-flex justify-content-between align-items-center">
-                                        <span class="article-date">12 Oktober 2025</span>
-                                        <div class="author-info">
-                                            <img src="https://i.pravatar.cc/150?img=12" class="author-avatar" alt="Mike Chen" width="25" height="25">
-                                        </div>
-                                    </div>
-                                    <h3 class="article-title">10 Tips Produktivitas untuk Content Creator</h3>
-                                    <p class="article-excerpt">Tingkatkan produktivitas Anda dengan tips-tips efektif yang telah terbukti berhasil di industri kreatif.</p>
-                                    <div class="article-footer d-flex justify-content-between align-items-center">
-                                        <a href="detail.html" class="btn-read-more">Read More</a>
-                                        <div class="article-tags">
-                                            <span class="badge bg-light text-dark me-1">Productivity</span>
-                                            <span class="badge bg-light text-dark">Tools</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Article Card 3 -->
-                        <div class="col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
-                            <div class="article-card">
-                                <div class="position-relative">
-                                    <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&h=300&fit=crop" class="article-img" alt="Article">
-                                    <span class="badge-category position-absolute top-0 start-0 m-3">Design</span>
-                                </div>
-                                <div class="article-body">
-                                    <div class="article-meta d-flex justify-content-between align-items-center">
-                                        <span class="article-date">10 Oktober 2025</span>
-                                        <div class="author-info">
-                                            <img src="https://i.pravatar.cc/150?img=5" class="author-avatar" alt="Emma Wilson" width="25" height="25">
-                                        </div>
-                                    </div>
-                                    <h3 class="article-title">Desain Modern untuk Website di Era AI</h3>
-                                    <p class="article-excerpt">Eksplorasi tren desain terbaru yang dipengaruhi oleh teknologi AI dan machine learning modern.</p>
-                                    <div class="article-footer d-flex justify-content-between align-items-center">
-                                        <a href="detail.html" class="btn-read-more">Read More</a>
-                                        <div class="article-tags">
-                                            <span class="badge bg-light text-dark me-1">UI/UX</span>
-                                            <span class="badge bg-light text-dark">AI</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Article Card 4 -->
-                        <div class="col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
-                            <div class="article-card">
-                                <div class="position-relative">
-                                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=300&fit=crop" class="article-img" alt="Article">
-                                    <span class="badge-category position-absolute top-0 start-0 m-3">Business</span>
-                                </div>
-                                <div class="article-body">
-                                    <div class="article-meta d-flex justify-content-between align-items-center">
-                                        <span class="article-date">8 Oktober 2025</span>
-                                        <div class="author-info">
-                                            <img src="https://i.pravatar.cc/150?img=1" class="author-avatar" alt="Sarah Johnson" width="25" height="25">
-                                        </div>
-                                    </div>
-                                    <h3 class="article-title">Cara Monetisasi Blog dengan Efektif</h3>
-                                    <p class="article-excerpt">Strategi praktis untuk menghasilkan income dari blog Anda dengan berbagai metode yang terbukti.</p>
-                                    <div class="article-footer d-flex justify-content-between align-items-center">
-                                        <a href="detail.html" class="btn-read-more">Read More</a>
-                                        <div class="article-tags">
-                                            <span class="badge bg-light text-dark me-1">Revenue</span>
-                                            <span class="badge bg-light text-dark">Strategy</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Article Card 5 -->
-                        <div class="col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
-                            <div class="article-card">
-                                <div class="position-relative">
-                                    <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?w=600&h=300&fit=crop" class="article-img" alt="Article">
-                                    <span class="badge-category position-absolute top-0 start-0 m-3">Technology</span>
-                                </div>
-                                <div class="article-body">
-                                    <div class="article-meta d-flex justify-content-between align-items-center">
-                                        <span class="article-date">6 Oktober 2025</span>
-                                        <div class="author-info">
-                                            <img src="https://i.pravatar.cc/150?img=8" class="author-avatar" alt="David Park" width="25" height="25">
-                                        </div>
-                                    </div>
-                                    <h3 class="article-title">Inovasi Teknologi di Dunia Blogging</h3>
-                                    <p class="article-excerpt">Temukan bagaimana teknologi terbaru mengubah cara kita menulis, membaca, dan berinteraksi dengan konten blog.</p>
-                                    <div class="article-footer d-flex justify-content-between align-items-center">
-                                        <a href="detail.html" class="btn-read-more">Read More</a>
-                                        <div class="article-tags">
-                                            <span class="badge bg-light text-dark me-1">Tech</span>
-                                            <span class="badge bg-light text-dark">Innovation</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Article Card 6 -->
-                        <div class="col-md-6 mb-4" data-aos="fade-up" data-aos-delay="500">
-                            <div class="article-card">
-                                <div class="position-relative">
-                                    <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?w=600&h=300&fit=crop" class="article-img" alt="Article">
-                                    <span class="badge-category position-absolute top-0 start-0 m-3">Lifestyle</span>
-                                </div>
-                                <div class="article-body">
-                                    <div class="article-meta d-flex justify-content-between align-items-center">
-                                        <span class="article-date">4 Oktober 2025</span>
-                                        <div class="author-info">
-                                            <img src="https://i.pravatar.cc/150?img=3" class="author-avatar" alt="Lisa Chen" width="25" height="25">
-                                        </div>
-                                    </div>
-                                    <h3 class="article-title">Gaya Hidup Minimalis di Era Digital</h3>
-                                    <p class="article-excerpt">Bagaimana menggabungkan prinsip hidup minimalis dengan kenyataan dunia digital yang serba kompleks.</p>
-                                    <div class="article-footer d-flex justify-content-between align-items-center">
-                                        <a href="detail.html" class="btn-read-more">Read More</a>
-                                        <div class="article-tags">
-                                            <span class="badge bg-light text-dark me-1">Minimalism</span>
-                                            <span class="badge bg-light text-dark">Digital</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        {% endfor %}
                     </div>
-
                     <!-- Pagination -->
                     <nav aria-label="Page navigation" class="mt-5" data-aos="fade-up">
                         <ul class="pagination justify-content-center">
@@ -243,34 +108,12 @@
                     <div class="mb-5" data-aos="fade-up" data-aos-delay="100">
                         <h4 class="mb-4">Categories</h4>
                         <div class="list-group">
-                            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                Tutorial
-                                <span class="badge bg-secondary">12</span>
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                Productivity
-                                <span class="badge bg-secondary">8</span>
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                Design
-                                <span class="badge bg-secondary">6</span>
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                Business
-                                <span class="badge bg-secondary">9</span>
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                Technology
-                                <span class="badge bg-secondary">11</span>
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                Lifestyle
-                                <span class="badge bg-secondary">7</span>
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                Health
-                                <span class="badge bg-secondary">5</span>
-                            </a>
+                            {% for category in get_category  %}
+                                <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                    {{ category.title_cat }}
+                                    <span class="badge bg-secondary">{{category.post_count}}</span>
+                                </a>
+                            {% endfor %}
                         </div>
                     </div>
 

@@ -15,6 +15,14 @@
                     <p class="auth-subtitle">Login to continue to Pastel Blog</p>
                 </div>
                 
+                {% comment %} form error {% endcomment %}
+                {% if form.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        <i class="bi bi-info-circle"></i> Login gagal username / password salah
+                    </div>
+                {% endif %}
+                {% comment %} end form error {% endcomment %}
+
                 {% comment %} form login {% endcomment %}
                 <form action="" method="POST">
                     {% csrf_token %}
