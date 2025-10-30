@@ -4,6 +4,7 @@ from django.db.models import Count
 from taggit.models import Tag
 # Create your views here.
 
+# halaman home blog, tampilkan kategori berdasarkan banyaknya blog
 def index(request):
     get_post = Post.objects.all()
     # LOGIKA EFISIEN UNTUK MENGAMBIL CATEGORY + COUNT DALAM 1 QUERY
@@ -20,6 +21,7 @@ def index(request):
     }
     return render (request, 'blog/index.html', context)
 
+# detail post
 def detail_post(request, slug_post):
     # Mengambil satu artikel berdasarkan slug yang diklik user.
     detail_post = Post.objects.get(slug_post=slug_post)

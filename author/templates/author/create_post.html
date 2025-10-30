@@ -1,0 +1,123 @@
+{% extends "author/dashboard_author.html" %} 
+{% load static %}
+
+{% block title %}{{ title }}{% endblock title %}
+
+{% block content %}
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-10 col-lg-8">
+            <h1 class="h3 fw-bold mb-4 text-center text-primary">{{ title }}</h1>
+            <p class="text-center text-muted">Isi detail postingan blog baru Anda di bawah ini. Jangan lupa atur kategori dan tag!</p>
+
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-body p-4 p-md-5">
+
+                    <!-- 
+                        PENTING: enctype="multipart/form-data" 
+                        HARUS ADA untuk mengizinkan upload file (gambar)
+                    -->
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- Display Field Errors (Jika ada error umum non-field) -->
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger" role="alert">
+                                <strong>Kesalahan Form:</strong>
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+
+                        <!-- 1. Field Judul -->
+                        <div class="mb-4">
+                            <label for="{{ form.title_post.id_for_label }}" class="form-label fw-semibold">
+                                {{ form.title_post.label }}
+                            </label>
+                            <!-- Django otomatis merender widget yang kita definisikan di forms.py -->
+                            {{ form.title_post }}
+                            {% if form.title_post.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.title_post.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- 2. Field Kategori -->
+                        <div class="mb-4">
+                            <label for="{{ form.category.id_for_label }}" class="form-label fw-semibold">
+                                {{ form.category.label }}
+                            </label>
+                            {{ form.category }}
+                            {% if form.category.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.category.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- 3. Field Gambar Utama -->
+                        <div class="mb-4">
+                            <label for="{{ form.images_post.id_for_label }}" class="form-label fw-semibold">
+                                {{ form.images_post.label }}
+                            </label>
+                            {{ form.images_post }}
+                            <small class="form-text text-muted">Format yang disarankan: JPEG/PNG. Ukuran maks 2MB.</small>
+                            {% if form.images_post.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.images_post.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- 4. Field Isi Konten (Fill) -->
+                        <div class="mb-4">
+                            <label for="{{ form.fill.id_for_label }}" class="form-label fw-semibold">
+                                {{ form.fill.label }}
+                            </label>
+                            {{ form.fill }}
+                            {% if form.fill.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.fill.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- 5. Field Tags (TaggableManager) -->
+                        <div class="mb-4">
+                            <label for="{{ form.tags.id_for_label }}" class="form-label fw-semibold">
+                                {{ form.tags.label }}
+                            </label>
+                            {{ form.tags }}
+                            <small class="form-text text-muted">Pisahkan tag dengan koma (contoh: python, django, coding).</small>
+                            {% if form.tags.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.tags.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- 6. Field Status (Draft/Published) -->
+                        <div class="mb-4">
+                            <label for="{{ form.status.id_for_label }}" class="form-label fw-semibold">
+                                {{ form.status.label }}
+                            </label>
+                            {{ form.status }}
+                            {% if form.status.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.status.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Tombol Submit -->
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm">
+                                <i class="bi bi-send-fill me-2"></i> Publikasikan Postingan
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

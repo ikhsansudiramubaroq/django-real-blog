@@ -142,8 +142,8 @@ STATICFILES_DIRS = [BASE_DIR / 'static'  # Path folder static utama di root proj
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR / 'media')
 
-# URL tujuan setelah login dan logout berhasil (redirect ke halaman index di app blog)
-LOGIN_REDIRECT_URL = 'blog:blog_index'
+# URL tujuan setelah login yaitu url redirect_by_role (sesuaikan rolenya) dan logout -> (url accounts:index)
+LOGIN_REDIRECT_URL = 'accounts:redirect_by_role'
 LOGOUT_REDIRECT_URL = 'accounts:index'
 
 # custom user

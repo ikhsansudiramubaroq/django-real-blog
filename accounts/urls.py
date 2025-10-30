@@ -13,6 +13,9 @@ urlpatterns = [
     path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('logout/', views.logout, name='logout'),
     path('register/', views.register_user, name='register'),
+    # URL perantara yang dipanggil setelah login berhasil
+    path('redirect-role/', views.redirect_by_role, name='redirect_by_role'),
+    path('author/dashboard/', views.author_dashboard, name='author_dashboard'),
     # path('password_reset/', PasswordResetView.as_view(template_name= "registration/password_reset_form.html"), 
     # name='password_reset'),
     # path('password_reset/done/', PasswordResetDoneView.as_view(template_name= "registration/password_reset_done.html"), 
