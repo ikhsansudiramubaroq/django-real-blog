@@ -40,4 +40,15 @@
                 prevEl: ".swiper-button-prev",
             },
         });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const btn = document.getElementById("readMoreBtn");
+            if (btn) {
+                btn.addEventListener("click", function() {
+                    document.getElementById("dots").style.display = "none";
+                    document.getElementById("more").style.display = "inline";
+                    btn.style.display = "none";
+                });
+            }
+        });
     </script>

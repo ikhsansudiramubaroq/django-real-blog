@@ -11,9 +11,10 @@
     <section class="py-5">
         <div class="container">
             <div class="row">
-                <div class="col-lg-8">
+                <div class="col-lg-12">
                     
-                    <img src="{{ detail_post.images_post.url }}" class="detail-hero" alt="Detail Artikel">
+                    <img src="{{ detail_post.images_post.url }}" style="width: 100%; height: auto; object-fit: contain; border-radius: 10px;" 
+                    class="detail-hero img-fluid" alt="Detail Artikel">
                     
                     <div class="detail-meta">
                         <a href="category.html?category=Tutorial" class="badge-category text-decoration-none">{{ detail_post.category }}</a>
@@ -31,13 +32,16 @@
                     
                     <div class="article-tags mb-4">
                         <span class="me-2">Tags:</span>
-                        {% for tags in tag  %}
-                        <a href="tag.html?tag=Tips" class="badge bg-light text-dark text-decoration-none me-1">{{tags}}</a>
+                        {% for t in tags %}
+                            {% comment %} <a href="{% url 'blog:tag_detail' t.slug %}" class="badge bg-light text-dark text-decoration-none me-1">{{ t.name }}</a> {% endcomment %}
+                            <a href="#" class="badge bg-light text-dark text-decoration-none me-1">{{ t.name }}</a>
+                        {% empty %}
+                            <span class="text-muted">Tidak ada tag</span>
                         {% endfor %}
                     </div>
                     
                     <div class="author-card">
-                        <img src="https://i.pravatar.cc/150?img=1" class="author-card-avatar" alt="Sarah Johnson">
+                        <img src=" {{ detail_post.user.img_user.url }} " class="author-card-avatar" alt="">
                         <div class="author-card-info flex-grow-1">
                             <h5>{{ detail_post.user.nama }}</h5>
                             <p>{{ detail_post.user.job }}</p>
@@ -46,7 +50,14 @@
                     </div>
                     
                     <div class="article-content">
-                        <p class="lead">{{ detail_post.fill }}</p>
+                        <p class="lead" id="post-content">
+                            {{ detail_post.fill|truncatechars:300 }}
+                            {% if detail_post.fill|length > 300 %}
+                                <span id="dots">...</span>
+                                <span id="more" style="display:none;">{{ detail_post.fill|safe }}</span>
+                                <button id="readMoreBtn" class="btn btn-link p-0">Lihat lebih banyak</button>
+                            {% endif %}
+                        </p>
                     </div>
                     
                     <div class="comments-section">
@@ -123,84 +134,29 @@
                         
                     </div>
                 </div>
+            </div>
                 
+            <div class="row">
                 <!-- Sidebar -->
-                <div class="col-lg-4">
-                    <!-- Categories Widget -->
-                    <div class="mb-5" data-aos="fade-up" data-aos-delay="100">
-                        <h4 class="mb-4">Categories</h4>
-                        <div class="list-group">
-                            <a href="category.html?category=Tutorial" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                Tutorial
-                                <span class="badge bg-secondary">12</span>
-                            </a>
-                            <a href="category.html?category=Productivity" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                Productivity
-                                <span class="badge bg-secondary">8</span>
-                            </a>
-                            <a href="category.html?category=Design" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                Design
-                                <span class="badge bg-secondary">6</span>
-                            </a>
-                            <a href="category.html?category=Business" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                Business
-                                <span class="badge bg-secondary">9</span>
-                            </a>
-                            <a href="category.html?category=Technology" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                Technology
-                                <span class="badge bg-secondary">11</span>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Tags Widget -->
-                    <div class="mb-5" data-aos="fade-up" data-aos-delay="200">
-                        <h4 class="mb-4">Popular Tags</h4>
-                        <div class="d-flex flex-wrap gap-2">
-                            <a href="tag.html?tag=Tips" class="badge bg-light text-dark text-decoration-none p-2">Tips</a>
-                            <a href="tag.html?tag=Blogging" class="badge bg-light text-dark text-decoration-none p-2">Blogging</a>
-                            <a href="tag.html?tag=Productivity" class="badge bg-light text-dark text-decoration-none p-2">Productivity</a>
-                            <a href="tag.html?tag=Design" class="badge bg-light text-dark text-decoration-none p-2">Design</a>
-                            <a href="tag.html?tag=AI" class="badge bg-light text-dark text-decoration-none p-2">AI</a>
-                            <a href="tag.html?tag=Technology" class="badge bg-light text-dark text-decoration-none p-2">Technology</a>
-                            <a href="tag.html?tag=Marketing" class="badge bg-light text-dark text-decoration-none p-2">Marketing</a>
-                            <a href="tag.html?tag=Strategy" class="badge bg-light text-dark text-decoration-none p-2">Strategy</a>
-                            <a href="tag.html?tag=Tools" class="badge bg-light text-dark text-decoration-none p-2">Tools</a>
-                            <a href="tag.html?tag=UI/UX" class="badge bg-light text-dark text-decoration-none p-2">UI/UX</a>
-                        </div>
-                    </div>
+                <div class="col-lg-12">
 
                     <!-- Related Articles -->
                     <div class="mb-5" data-aos="fade-up" data-aos-delay="300">
                         <h4 class="mb-4">Related Articles</h4>
                         <div class="list-group">
-                            <a href="detail.html" class="list-group-item list-group-item-action">
-                                <div class="d-flex">
-                                    <img src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=100&h=70&fit=crop" class="me-3 rounded" alt="Article" width="60" height="60">
-                                    <div>
-                                        <h6 class="mb-0">10 Tips Produktivitas untuk Content Creator</h6>
-                                        <small class="text-muted">12 Oktober 2025</small>
+                            {% for post in related_post %}
+                                <a href="{% url 'blog:detail_post' post.slug_post %}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex">
+                                        <img src="{{ post.images_post.url }}" class="me-3 rounded" alt="{{ post.title_post }}" width="60" height="60">
+                                        <div>
+                                            <h6 class="mb-0">{{ post.title_post|truncatechars:45 }}</h6>
+                                            <small class="text-muted">{{ post.publish|date:"d M Y" }}</small>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
-                            <a href="detail.html" class="list-group-item list-group-item-action">
-                                <div class="d-flex">
-                                    <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=100&h=70&fit=crop" class="me-3 rounded" alt="Article" width="60" height="60">
-                                    <div>
-                                        <h6 class="mb-0">Desain Modern untuk Website di Era AI</h6>
-                                        <small class="text-muted">10 Oktober 2025</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="detail.html" class="list-group-item list-group-item-action">
-                                <div class="d-flex">
-                                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=100&h=70&fit=crop" class="me-3 rounded" alt="Article" width="60" height="60">
-                                    <div>
-                                        <h6 class="mb-0">Cara Monetisasi Blog dengan Efektif</h6>
-                                        <small class="text-muted">8 Oktober 2025</small>
-                                    </div>
-                                </div>
-                            </a>
+                                </a>
+                            {% empty %}
+                                <p class="text-muted">Belum ada artikel terkait.</p>
+                            {% endfor %}
                         </div>
                     </div>
 
