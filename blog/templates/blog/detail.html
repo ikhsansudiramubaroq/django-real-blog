@@ -46,7 +46,7 @@
                             <h5>{{ detail_post.user.nama }}</h5>
                             <p>{{ detail_post.user.job }}</p>
                         </div>
-                        <a href="author.html" class="btn-view-profile">View Profile</a>
+                        <a href="{% url 'author:view_author' slug_author=detail_post.user.author_profile.slug_author %}" class="btn-view-profile">View Profile</a>
                     </div>
                     
                     <div class="article-content">

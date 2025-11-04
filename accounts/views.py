@@ -12,7 +12,7 @@ def is_author(user):
 
 def is_reader(user):
     """Fungsi untuk memeriksa apakah user adalah Pembaca biasa."""
-    return user.is_authenticated and not user.role == 'user'
+    return user.is_authenticated and user.role == 'user'
 # END CEK ROLE
 
 # Create your views here.
