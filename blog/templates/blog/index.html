@@ -163,7 +163,7 @@
                         <h4 class="mb-4">Categories</h4>
                         <div class="list-group">
                             {% for category in get_category  %}
-                                <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                <a href="{% url 'blog:category_view' category.slug_cat %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                                     {{ category.title_cat }}
                                     <span class="badge bg-secondary">{{category.post_count}}</span>
                                 </a>
@@ -176,7 +176,7 @@
                         <h4 class="mb-4">Popular Tags</h4>
                         <div class="d-flex flex-wrap gap-2">
                             {% for tag in popular_tags %}
-                                <span class="badge bg-light text-dark me-1">{{ tag.name }}</span>
+                                <a href="tag.html" class="badge bg-light text-dark me-1 text-decoration-none">{{ tag.name }}</a>
                             {% empty %}
                                 <p class="text-muted">Belum ada tag populer.</p>
                             {% endfor %}

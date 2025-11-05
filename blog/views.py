@@ -88,3 +88,51 @@ def detail_post(request, slug_post):
         'related_post': related_post
     }
     return render (request, 'blog/detail.html', context)
+
+# halaman untuk category
+def category_view(request,slug_cat ):
+    
+    # ambil category yang sedang dibuka + jumlah post
+    current_category = get_object_or_404 (
+        Category.objects.annotate(
+            post_count=Count('post', distinct=True) 
+        ),
+        slug_cat=slug_cat
+    )
+    
+    # ambil semua category untuk looping category
+    category = Category.objects.annotate(
+        post_count=Count('post', distinct=True)
+    ).order_by('-post_count')
+    
+    # ambil semua post berdasarkan category ini
+    posts = (
+        Post.objects.filter(category=current_category)
+        .select_related('category', 'user')
+        .prefetch_related('tags')
+        .order_by('-publish')
+    )
+    
+    # Ambil 3 artikel dengan views terbanyak di category ini
+    popular_post_category = (
+    Post.objects.filter(category=current_category)
+    .select_related('user', 'category')
+    .order_by('-views')[:3]
+    )
+
+    # hitung 10 tag populer di category tersebut
+    popular_tag = (
+        Tag.objects.filter(post__category=current_category)
+        .annotate(total_post=Count('post', distinct=True))
+        .order_by('-total_post')[:10]
+    )
+    
+    context = {
+        'title' : f"Category-{current_category.title_cat}",
+        'posts' : posts,
+        'popular_post_category' : popular_post_category,
+        'popular_tag' : popular_tag,
+        'current_category' : current_category,
+        'category' : category
+    }
+    return render(request,'blog/category.html', context)

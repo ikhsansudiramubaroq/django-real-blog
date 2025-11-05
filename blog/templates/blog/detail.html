@@ -64,17 +64,9 @@
                         <h4 class="comments-title">Comments (3)</h4>
                         
                         <!-- Login to Comment (tampilkan jika belum login) -->
-                        <!--
-                        <div class="login-to-comment" id="loginPrompt">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                            </svg>
-                            <p>Please login to leave a comment</p>
-                            <a href="login.html" class="btn btn-login">Login to Comment</a>
-                        </div>
-                        -->
                         
-                        <!-- Comment Form (tampilkan jika sudah login) -->
+                        {% if request.user.is_authenticated %}
+                            <!-- Comment Form (tampilkan jika sudah login) -->
                         <div class="comment-form" id="commentForm">
                             <h6>Leave a Comment</h6>
                             <div class="mb-3">
@@ -82,7 +74,16 @@
                             </div>
                             <button class="btn btn-login">Post Comment</button>
                         </div>
-                        
+                        {% else %}
+                            <div class="login-to-comment" id="loginPrompt">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            <p>Please login to leave a comment</p>
+                            <a href="login.html" class="btn btn-login">Login to Comment</a>
+                        </div>
+                        {% endif %}
+                            
                         <!-- Comment List -->
                         <div class="comment-item">
                             <div style="display: flex; gap: 1rem;">
