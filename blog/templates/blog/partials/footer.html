@@ -16,6 +16,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.7/swiper-bundle.min.js"></script>
     
     <script>
+        
         // Initialize AOS
         AOS.init({
             duration: 800,
@@ -51,4 +52,43 @@
                 });
             }
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+    // ambil semua tombol reply
+    const buttons = document.querySelectorAll('.toggle-reply');
+    
+    buttons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const commentId = this.dataset.commentId;
+            const formContainer = this.closest('.comment-item').querySelector('.reply-form-container');
+            const form = formContainer.querySelector(`#reply-form-${commentId}`);
+
+            // sembunyikan semua form reply lain
+            document.querySelectorAll('.reply-form-container').forEach(container => {
+                if (container !== formContainer) {
+                    container.style.display = 'none';
+                }
+            });
+            
+            // toggle form yang diklik
+            if (form.style.display === 'none' || form.style.display === '') {
+                form.style.display = 'block';
+                formContainer.style.display = 'block';
+            } else {
+                form.style.display = 'none';
+                formContainer.style.display = 'none';
+            }
+        });
+    });
+    
+    // tambahkan event listener untuk tombol cancel
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('cancel-reply')) {
+            const form = e.target.closest('.reply-form');
+            form.style.display = 'none';
+            const formContainer = form.closest('.reply-form-container');
+            formContainer.style.display = 'none';
+        }
+    });
+});
     </script>

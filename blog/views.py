@@ -4,6 +4,7 @@ from .models import *
 from django.core.paginator import Paginator
 from django.db.models import Count, F, Q
 from taggit.models import Tag
+from .forms import CommentsForm
 
 # Create your views here.
 
@@ -80,12 +81,34 @@ def detail_post(request, slug_post):
     # Tambahkan counter views (opsional, efisien di PostgreSQL)
     Post.objects.filter(pk=detail_post.pk).update(views=F('views') + 1)
     
+    # ambil comment sesuai dengan postingan terkait
+    comment_post = Comment.objects.filter(post=detail_post, reply=None).order_by('-timestamp')
+    
+    # fungsi comment
+    if request.method == 'POST':
+        form = CommentsForm(request.POST or None)
+        if form.is_valid():
+            comment = request.POST.get('comments')
+            reply = request.POST.get('reply_slug')
+            comments_reply = None
+            
+            if reply:
+                comments_reply = Comment.objects.get(id=reply)
+                
+            comment = Comment.objects.create(post=detail_post,user=request.user,
+                                            comments=comment,reply=comments_reply)
+            form = CommentsForm()
+    else:
+        form=CommentsForm()
+
     # tag = Tag.objects.all()
     context = {
         'title' : detail_post.title_post,
         'detail_post' : detail_post,
         'tags' : tags,
-        'related_post': related_post
+        'related_post': related_post,
+        'form' : form,
+        'comments' : comment_post,
     }
     return render (request, 'blog/detail.html', context)
 

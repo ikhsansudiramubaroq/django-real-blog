@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 # Import Form dari file forms.py di aplikasi yang sama
 from .forms import PostForm
-from blog.models import Post, Category
+from blog.models import Post, Category, Comment
 from .models import AuthorProfile
 from django.db.models import Count, F, Q
 
@@ -130,12 +130,13 @@ def view_author(request, slug_author):
     
     
     # ambil semua komentar dari postingan milik author ini
-    # comments = Comment.objects.filter(post__author=user)
+    comments = Comment.objects.filter(post__user=user)
     
     context ={
         'title' : 'View Author',
         'detail_author' : detail_author,
         'posts' : post,
         'get_category' : get_category,
+        'comment' : comments,
     }
     return render (request, 'author/author.html',context)

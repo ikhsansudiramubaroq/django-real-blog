@@ -60,7 +60,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     tanggal_lahir = models.DateTimeField(blank=True, default=timezone.now)
     email = models.EmailField(unique=True, blank=True)
     no_hp = models.CharField(blank=True, null=True)
-    img_user = models.ImageField(upload_to='user/', default='profile.jpg', blank=True)
+    img_user = models.ImageField(upload_to='user/', default='user/profile-default.jpg', blank=True)
     role = models.CharField(max_length=20,choices=ROLE_CHOICES, default='user')
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)

@@ -136,36 +136,18 @@
                     <h3 class="section-title mt-5" data-aos="fade-up">Recent Comments</h3>
                     <div class="card mt-4" data-aos="fade-up" data-aos-delay="100">
                         <div class="card-body">
-                            <div class="comment-item mb-3 pb-3 border-bottom">
-                                <div class="d-flex align-items-center mb-2">
-                                    <img src="https://i.pravatar.cc/150?img=8" class="author-avatar me-3" alt="John Doe" width="40" height="40">
-                                    <div>
-                                        <h6 class="mb-0 comment-author">John Doe</h6>
-                                        <small class="text-muted">on <a href="detail.html">Panduan Lengkap Memulai Blog di 2025</a></small>
-                                    </div>
-                                </div>
-                                <p class="mb-0">Artikel yang sangat membantu! Saya sudah mencoba beberapa tips dan hasilnya luar biasa. Terima kasih atas sharingnya.</p>
-                            </div>
-                            <div class="comment-item mb-3 pb-3 border-bottom">
-                                <div class="d-flex align-items-center mb-2">
-                                    <img src="https://i.pravatar.cc/150?img=9" class="author-avatar me-3" alt="Lisa Anderson" width="40" height="40">
-                                    <div>
-                                        <h6 class="mb-0 comment-author">Lisa Anderson</h6>
-                                        <small class="text-muted">on <a href="detail.html">Cara Monetisasi Blog dengan Efektif</a></small>
-                                    </div>
-                                </div>
-                                <p class="mb-0">Penjelasannya sangat detail dan mudah dipahami. Ditunggu artikel selanjutnya!</p>
-                            </div>
+                            {% for comments in comment  %}
                             <div class="comment-item">
                                 <div class="d-flex align-items-center mb-2">
-                                    <img src="https://i.pravatar.cc/150?img=10" class="author-avatar me-3" alt="Mark Wilson" width="40" height="40">
+                                    <img src="{{ comments.user.img_user.url }} " class="author-avatar me-3" alt="Mark Wilson" width="40" height="40">
                                     <div>
-                                        <h6 class="mb-0 comment-author">Mark Wilson</h6>
-                                        <small class="text-muted">on <a href="detail.html">Inovasi Teknologi di Dunia Blogging</a></small>
+                                        <h6 class="mb-0 comment-author">{{comments.user.nama}}</h6>
+                                        <small class="text-muted">on <a href="{% url 'blog:detail_post' comments.post.slug_post  %}">{{comments.post.title_post}}</a></small>
                                     </div>
                                 </div>
-                                <p class="mb-0">Sangat menginspirasi! Saya baru mulai blogging dan tips yang Anda berikan sangat membantu sekali.</p>
+                                <p class="mb-0"><i>"{{comments.comments}}"</i></p>
                             </div>
+                            {% endfor %}
                         </div>
                     </div>
 

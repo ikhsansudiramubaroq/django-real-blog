@@ -16,7 +16,7 @@
                         <h1 data-aos="fade-up">Welcome to Pastel Blog</h1>
                         <p data-aos="fade-up" data-aos-delay="100">Discover amazing stories and insights</p>
                         <div class="hero-buttons d-flex flex-wrap gap-3 justify-content-center" data-aos="fade-up" data-aos-delay="100">
-                            <a href="login.html" class="btn btn-auth btn-auth-secondary">Get Started</a>
+                            <a href="{% url 'accounts:register' %}" class="btn btn-auth btn-auth-secondary">Get Started</a>
                             <a href="contact.html" class="btn btn-login">Contact Us</a>
                         </div>
                     </div>
@@ -26,7 +26,7 @@
                         <h1 data-aos="fade-up">Learn & Grow Together</h1>
                         <p data-aos="fade-up" data-aos-delay="100">Join our community of writers and readers</p>
                         <div class="hero-buttons d-flex flex-wrap gap-3 justify-content-center" data-aos="fade-up" data-aos-delay="100">
-                            <a href="register.html" class="btn btn-auth btn-auth-secondary">Join Now</a>
+                            <a href="{% url 'accounts:register' %}" class="btn btn-auth btn-auth-secondary">Join Now</a>
                             <a href="contact.html" class="btn btn-login">Explore Articles</a>
                         </div>
                     </div>
@@ -36,7 +36,7 @@
                         <h1 data-aos="fade-up">Share Your Story</h1>
                         <p data-aos="fade-up" data-aos-delay="100">Start writing and inspire others</p>
                         <div class="hero-buttons d-flex flex-wrap gap-3 justify-content-center" data-aos="fade-up" data-aos-delay="100">
-                            <a href="register.html" class="btn btn-auth btn-auth-secondary">Write For Us</a>
+                            <a href="{% url 'accounts:register' %}" class="btn btn-auth btn-auth-secondary">Write For Us</a>
                             <a href="contact.html" class="btn btn-login">Featured Posts</a>
                         </div>
                     </div>
