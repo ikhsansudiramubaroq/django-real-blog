@@ -24,5 +24,6 @@ urlpatterns = [
     # path('author/', include('author.urls')),
     path('accounts/', include('accounts.urls')),
     path('author/', include('author.urls')),
+    path('contact/', include('contact.urls')),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) #fungsi untuk load file media seperti gambar dll

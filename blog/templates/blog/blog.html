@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+    {% block content %}
+    
+    {% comment %} navbar {% endcomment %}
+    {% include "blog/partials/navbar.html" %}
+    {% comment %} end navbar {% endcomment %}
+    <!-- Blog Header -->
+    <section id="hero-blog" class="py-5" style="background-color: var(--pastel-cyan);">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <span class="badge-category mb-3">All Article</span>
+                <h1 class="display-4 fw-bold">Find the popular Article</h1>
+                <p class="text-muted">
+                    <span id="articleCount">{{ current_category.post_count }}</span> Postingan Found
+                </p>
+            </div>
+        </div>
+</section>
+
+    <!-- Category Articles -->
+    <section class="article-section py-5" id="article">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <!-- Article Grid - 2 Columns -->
+                    <div class="row">
+                        <!-- Article Card 1 -->
+                        {% for post in get_post  %}
+                        <div class="col-md-6 mb-4" data-aos="fade-up">
+                            <div class="article-card">
+                                <div class="position-relative">
+                                    <img src="{{ post.images_post.url }}" class="article-img" alt="Article">
+                                    <span class="badge-category position-absolute top-0 start-0 m-3">{{post.category}}</span>
+                                </div>
+                                <div class="article-body">
+                                    <div class="article-meta d-flex justify-content-between align-items-center">
+                                        <span class="article-date">{{post.publish}}</span>
+                                        <div class="author-info">
+                                            <img src="{{ post.user.img_user.url }}" class="author-avatar" alt="Sarah Johnson" width="25" height="25">
+                                        </div>
+                                    </div>
+                                    <h3 class="article-title" style="height:50px;">{{post.title_post|truncatechars:35}}</h3>
+                                    <p class="article-excerpt mb-2" style="height:50px;">{{post.fill|truncatechars:70}}</p>
+                                    <div class="article-footer d-flex justify-content-between align-items-center">
+                                        <a href="{% url 'blog:detail_post' post.slug_post %}" class="btn-read-more">Read More</a>
+                                        <div class="article-tags">
+                                            {% with post.tags.all as tags %}
+                                                {% for tag in tags|slice:":1" %}
+                                                    <span class="badge bg-light text-dark me-1">{{ tag.name }}</span>
+                                                {% endfor %}
+                                                {% if tags|length > 1 %}
+                                                    <span class="badge bg-secondary text-white me-1">
+                                                        {{ tags|length|add:"-1" }} lainnya
+                                                    </span>
+                                                {% endif %}
+                                            {% endwith %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                    <!-- Pagination -->
+                    <nav aria-label="Page navigation" class="mt-5" data-aos="fade-up">
+                        {% comment %} tidak menampilkan pagination kalau tidak ada halaman selanjutnya {% endcomment %}
+                        {% if get_post.has_other_pages %}
+                        <ul class="pagination justify-content-center">
+                            {% comment %} tombol ke halaman pertama {% endcomment %}
+                            {% comment %} menampilkan panah dengan nilai true jika ada halaman sebelumnya {% endcomment %}
+                            {% if get_post.number > 1 %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1" aria-label="First">
+                                    <span aria-hidden="true">&laquo;&laquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            
+                            {# Tombol Previous #}
+                            {% if get_post.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ get_post.previous_page_number }}" aria-label="Previous">
+                                    <span aria-hidden="true">Prev</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {# Looping untuk menampilkan nomor halaman (dengan range terbatas biar tidak terlalu panjang tampila 5 halaman aktif) #}
+                            {% for i in get_post.paginator.page_range %}
+                                {% if i >= get_post.number|add:"-2" and i <= get_post.number|add:"2" %}
+                                    {% if get_post.number == i %}
+                                        <li class="page-item active" aria-current="page">
+                                            <a class="page-link" href="#">{{ i }}</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {# Tombol Next #}
+                            {% if get_post.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ get_post.next_page_number }}" aria-label="Next">
+                                    <span aria-hidden="true">Next</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {# Tombol ke halaman terakhir #}
+                            {% if get_post.number < get_post.paginator.num_pages %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ get_post.paginator.num_pages }}" aria-label="Last">
+                                    <span aria-hidden="true">&raquo;&raquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                        {% endif %}
+                    </nav>
+                </div>
+            </div>
+
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <!-- Categories Widget -->
+                    <div class="mb-5" data-aos="fade-up" data-aos-delay="100">
+                        <h4 class="mb-4">Categories</h4>
+                        <div class="list-group">
+                            {% for cat in get_category %}
+                                <a href="{% url 'blog:category_view' cat.slug_cat %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center 
+                                {% if cat.slug_cat == current_category.slug_cat %}active{% endif %}">
+                                    {{ cat.title_cat }}
+                                    <span class="badge bg-secondary"> {{ cat.post_count }} </span>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Tags Widget -->
+                    <div class="mb-5" data-aos="fade-up" data-aos-delay="200">
+                        <h4 class="mb-4">Popular Tags</h4>
+                        <div class="d-flex flex-wrap gap-2">
+                            
+                            {% for pop_tag in popular_tags %}    
+                            <a href="tag.html" class="badge bg-light text-dark text-decoration-none p-2">{{pop_tag}}</a>
+                            {% endfor %}
+                                
+                        </div>
+                    </div>
+
+                    <!-- Popular Articles Widget -->
+                    <div class="mb-5" data-aos="fade-up" data-aos-delay="300">
+                        <h4 class="mb-4">Popular Article </h4>
+                        <div class="list-group">
+                            
+                            {% for pop in popular_post  %}
+                                <a href="{% url 'blog:detail_post' pop.slug_post %}"  class="list-group-item list-group-item-action">
+                                <div class="d-flex">
+                                    <img src=" {{ pop.images_post.url }} " class="me-3 rounded" alt="Article" width="60" height="60">
+                                    <div>
+                                        <h6 class="mb-0">{{pop.title_post}}</h6>
+                                        <small class="text-muted">{{pop.publish}}</small> <br>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                                            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+                                            <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                                        </svg>
+                                        <span class="ms-1">{{ pop.views }}</span>
+                                    </div>
+                                </div>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Newsletter Widget -->
+                    <div data-aos="fade-up" data-aos-delay="400">
+                        <h4 class="mb-4">Newsletter</h4>
+                        <div class="card border-0 p-4" style="background-color: var(--pastel-pink);">
+                            <h5>Stay Updated</h5>
+                            <p class="small">Get the latest tutorial posts delivered straight to your inbox.</p>
+                            <form>
+                                <div class="mb-3">
+                                    <input type="email" class="form-control" placeholder="Enter your email">
+                                </div>
+                                <button type="submit" class="btn btn-auth btn-auth-primary w-100">Subscribe</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}
+
+    {% include "partials/footer.html" %}

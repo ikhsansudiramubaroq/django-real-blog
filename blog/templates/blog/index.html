@@ -50,15 +50,15 @@
     <!-- Featured Articles Section -->
     <section class="article-section" id="featured">
         <div class="container">
-            <h2 class="section-title" data-aos="fade-up">Featured Articles</h2>
+            <h2 class="section-title" data-aos="fade-up">New Articles</h2>
             
             <div class="row">
-                <div class="col-lg-8">
+                <div class="col-lg-12">
                     <!-- Article Grid - 2 Columns -->
                     <div class="row">
                         <!-- Article Card 1 -->
                         {% for post in get_post  %}
-                        <div class="col-md-6 mb-4" data-aos="fade-up">
+                        <div class="col-md-4 mb-4" data-aos="fade-up">
                             <div class="article-card">
                                 <div class="position-relative">
                                     <img src="{{ post.images_post.url }}" class="article-img" alt="Article">
@@ -94,131 +94,10 @@
                         {% endfor %}
                     </div>
 
-                    <!-- Pagination -->
-                    <nav aria-label="Page navigation" class="mt-5" data-aos="fade-up">
-                        {% comment %} tidak menampilkan pagination kalau tidak ada halaman selanjutnya {% endcomment %}
-                        {% if get_post.has_other_pages %}
-                        <ul class="pagination justify-content-center">
-                            {% comment %} tombol ke halaman pertama {% endcomment %}
-                            {% comment %} menampilkan panah dengan nilai true jika ada halaman sebelumnya {% endcomment %}
-                            {% if get_post.number > 1 %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page=1" aria-label="First">
-                                    <span aria-hidden="true">&laquo;&laquo;</span>
-                                    </a>
-                                </li>
-                            {% endif %}
-                            
-                            {# Tombol Previous #}
-                            {% if get_post.has_previous %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ get_post.previous_page_number }}" aria-label="Previous">
-                                    <span aria-hidden="true">Prev</span>
-                                    </a>
-                                </li>
-                            {% endif %}
-
-                            {# Looping untuk menampilkan nomor halaman (dengan range terbatas biar tidak terlalu panjang tampila 5 halaman aktif) #}
-                            {% for i in get_post.paginator.page_range %}
-                                {% if i >= get_post.number|add:"-2" and i <= get_post.number|add:"2" %}
-                                    {% if get_post.number == i %}
-                                        <li class="page-item active" aria-current="page">
-                                            <a class="page-link" href="#">{{ i }}</a>
-                                        </li>
-                                    {% else %}
-                                        <li class="page-item">
-                                            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
-                                        </li>
-                                    {% endif %}
-                                {% endif %}
-                            {% endfor %}
-
-                            {# Tombol Next #}
-                            {% if get_post.has_next %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ get_post.next_page_number }}" aria-label="Next">
-                                    <span aria-hidden="true">Next</span>
-                                    </a>
-                                </li>
-                            {% endif %}
-
-                            {# Tombol ke halaman terakhir #}
-                            {% if get_post.number < get_post.paginator.num_pages %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ get_post.paginator.num_pages }}" aria-label="Last">
-                                    <span aria-hidden="true">&raquo;&raquo;</span>
-                                    </a>
-                                </li>
-                            {% endif %}
-                        </ul>
-                        {% endif %}
-                    </nav>
+                    {% comment %} button all blog {% endcomment %}
+                    <a href="{% url 'blog:blog_view' %}" class="btn btn-auth btn-auth-primary w-100">See All Blog</a>
                 </div>
                 {% comment %} end pagination {% endcomment %}
-
-                <!-- Sidebar -->
-                <div class="col-lg-4">
-                    <!-- Categories Widget -->
-                    <div class="mb-5" data-aos="fade-up" data-aos-delay="100">
-                        <h4 class="mb-4">Categories</h4>
-                        <div class="list-group">
-                            {% for category in get_category  %}
-                                <a href="{% url 'blog:category_view' category.slug_cat %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                    {{ category.title_cat }}
-                                    <span class="badge bg-secondary">{{category.post_count}}</span>
-                                </a>
-                            {% endfor %}
-                        </div>
-                    </div>
-
-                    <!-- List Tags  -->
-                    <div class="mb-5" data-aos="fade-up" data-aos-delay="200">
-                        <h4 class="mb-4">Popular Tags</h4>
-                        <div class="d-flex flex-wrap gap-2">
-                            {% for tag in popular_tags %}
-                                <a href="tag.html" class="badge bg-light text-dark me-1 text-decoration-none">{{ tag.name }}</a>
-                            {% empty %}
-                                <p class="text-muted">Belum ada tag populer.</p>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    {% comment %} end tags {% endcomment %}
-
-                    <!-- Popular Articles Widget -->
-                        <div class="mb-5" data-aos="fade-up" data-aos-delay="300">
-                            <h4 class="mb-4">Popular Articles</h4>
-                            <div class="list-group">
-                                {% for post in popular_post %}
-                                <a href="{% url 'blog:detail_post' post.slug_post %}" class="list-group-item list-group-item-action">
-                                    <div class="d-flex">
-                                        <img src="{{ post.images_post.url }}" class="me-3 rounded" alt="{{ post.title_post }}" width="60" height="60">
-                                        <div>
-                                            <h6 class="mb-0">{{ post.title_post }}</h6>
-                                            <small class="text-muted">{{ post.publish|date:"d F Y" }}</small>
-                                        </div>
-                                    </div>
-                                </a>
-                                {% empty %}
-                                <p class="text-muted">Belum ada artikel populer.</p>
-                                {% endfor %}
-                            </div>
-                        </div>
-
-                    <!-- Newsletter Widget -->
-                    <div class="mb-5" data-aos="fade-up" data-aos-delay="400">
-                        <h4 class="mb-4">Newsletter</h4>
-                        <div class="card border-0 p-4" style="background-color: var(--pastel-pink);">
-                            <h5>Stay Updated</h5>
-                            <p class="small">Get the latest posts delivered straight to your inbox.</p>
-                            <form>
-                                <div class="mb-3">
-                                    <input type="email" class="form-control" placeholder="Enter your email">
-                                </div>
-                                <button type="submit" class="btn btn-auth btn-auth-primary w-100">Subscribe</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
@@ -232,10 +111,12 @@
                     <p class="mb-0">Stay updated with our latest articles and news. No spam, just quality content.</p>
                 </div>
                 <div class="col-lg-6">
-                    <form class="d-flex">
-                        <input type="email" class="form-control me-2" placeholder="Enter your email">
+                    <form class="d-flex" method="POST" action="{% url 'contact:newsletter_subscribe' %}">
+                        {% csrf_token %}
+                        <input type="email" name="email" class="form-control me-2" placeholder="Enter your email" required>
                         <button type="submit" class="btn btn-auth btn-auth-primary">Subscribe</button>
                     </form>
+
                 </div>
             </div>
         </div>

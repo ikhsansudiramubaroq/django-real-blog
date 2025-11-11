@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'accounts',
     'author',
     'taggit',
+    'contact'
 ]
 
 MIDDLEWARE = [
@@ -148,5 +149,16 @@ LOGOUT_REDIRECT_URL = 'accounts:index'
 
 # custom user
 AUTH_USER_MODEL = 'accounts.User'
+
+# settings.py emial
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# parameter smtp host,port, host_user, host_password
+EMAIL_HOST = 'smtp.gmail.com' #STRING
+EMAIL_PORT = 587 # INTEGER
+EMAIL_HOST_USER = 'ikhsansudiramubaroq2910@gmail.com' #STRING
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD") #STRING password aplikasi
+EMAIL_USE_TLS = True #BOOLEAN
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

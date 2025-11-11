@@ -14,10 +14,10 @@
                         <a class="nav-link active" href="{% url 'blog:blog_index' %}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'blog:blog_index' %}">Blog</a>
+                        <a class="nav-link" href="{% url 'blog:blog_view' %}">Blog</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'blog:blog_index' %}">Contact</a>
+                        <a class="nav-link" href="{% url 'contact:contact' %}">Contact</a>
                     </li>
                     <li class="nav-item">
                         {% if request.user.is_authenticated %}

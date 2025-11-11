@@ -16,8 +16,37 @@ def index(request):
         Post.objects.all()
         .select_related('category', 'user') #join kode (efisien)
         .prefetch_related('tags')           #prefetch many to many
+        .order_by('-publish')[:6]            #urutkan terbaru
+    )
+    
+    context = {
+        'title': 'Pastel - Blog',
+        'get_post': get_post, 
+    }
+    return render (request, 'blog/index.html', context)
+
+# view untuk menampilkan semua blog,semua kategori dan semua tag serta search
+# halaman home blog, tampilkan kategori berdasarkan banyaknya blog
+def blog_view(request):
+    
+    # Ambil query dari parameter pencarian
+    search_query = request.GET.get('q', '')
+    
+    # Prefetch tags agar efisien (1 query join)
+    get_post = (
+        Post.objects.all()
+        .select_related('category', 'user') #join kode (efisien)
+        .prefetch_related('tags')           #prefetch many to many
         .order_by('-publish')               #urutkan terbaru
     )
+    
+    # Jika ada query pencarian, filter hasilnya
+    if search_query:
+        get_post = get_post.filter(
+            Q(title_post__icontains=search_query) |
+            Q(fill__icontains=search_query) |
+            Q(tags__name__icontains=search_query)
+        ).distinct()
     
     # add paginator
     paginate = Paginator(get_post, 4) # Show 6 articles per page
@@ -37,7 +66,7 @@ def index(request):
         # 'post' adalah related_name default dari ForeignKey Post.category.
         post_count=Count('post', distinct=True) 
         # tampilkan category dengan paling banyak postingan
-    ).order_by('-post_count')
+    ).order_by('-post_count')[:4]
     
     # Ambil 3 artikel dengan views terbanyak
     popular_post = (
@@ -51,8 +80,9 @@ def index(request):
         'popular_tags': popular_tags, #tag yang ditampilkan
         'get_category' : get_category,
         'popular_post': popular_post,
+        'search_query': search_query,  # tambahkan search query ke context
     }
-    return render (request, 'blog/index.html', context)
+    return render (request, 'blog/blog.html', context)
 
 # detail post
 def detail_post(request, slug_post):

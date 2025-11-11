@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+    
+{% block content %}
+
+    <!-- Contact Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 mx-auto">
+                    
+                    <div class="contact-header" data-aos="fade-up">
+                        <h2>Get In Touch</h2>
+                        <p class="text-muted">Have a question or feedback? We'd love to hear from you.</p>
+                    </div>
+                    
+                    <div class="contact-form-card" data-aos="fade-up" data-aos-delay="100">
+                    <form class="pt-3" method="POST" >
+                        {% csrf_token %}
+                        {% for fields in form  %}
+                        <div class="mb-3">
+                            {% comment %} fields.auto_id untuk mengambil setiap id dari masing-masing field di model {% endcomment %}
+                            <label for="{{ fields.auto_id }}"> {{ fields.label }} </label>
+                            {{ fields }}
+                        </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-auth btn-auth-primary">Kirim</button>
+                    </form> 
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content%}
