@@ -31,7 +31,16 @@ def register_user(request):
         form = RegisterUserForm(request.POST or None)
         
         if form.is_valid():
-            form.save()
+            user = form.save(commit=False)
+            
+            # ✅ kalau checkbox author dicentang, set role jadi author
+            if form.cleaned_data.get('is_author'):
+                user.role = 'author'
+            else:
+                user.role = 'user'  # default misal user biasa
+                
+            user.save()
+            
             return redirect('accounts:login')
         
     else:

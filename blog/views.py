@@ -29,8 +29,6 @@ def index(request):
 # halaman home blog, tampilkan kategori berdasarkan banyaknya blog
 def blog_view(request):
     
-    # Ambil query dari parameter pencarian
-    search_query = request.GET.get('q', '')
     
     # Prefetch tags agar efisien (1 query join)
     get_post = (
@@ -40,18 +38,10 @@ def blog_view(request):
         .order_by('-publish')               #urutkan terbaru
     )
     
-    # Jika ada query pencarian, filter hasilnya
-    if search_query:
-        get_post = get_post.filter(
-            Q(title_post__icontains=search_query) |
-            Q(fill__icontains=search_query) |
-            Q(tags__name__icontains=search_query)
-        ).distinct()
-    
     # add paginator
-    paginate = Paginator(get_post, 4) # Show 6 articles per page
-    page_number = request.GET.get('page') # get('page') adalah fungsi dari paginator
-    post = paginate.get_page(page_number) # get_page adalah fungsi dari paginator
+    paginate = Paginator(get_post, 4) # Bagi daftar posts menjadi potongan kecil, masing-masing berisi 4 item.
+    page_number = request.GET.get('page') # Coba cek di URL, user lagi di halaman ke berapa? GET bagian dari request, dan get bagian dar GET
+    post = paginate.get_page(page_number) # Dari kumpulan semua posts, ambil hanya bagian yang sesuai dengan nomor halaman get_number.
     
     # Hitung tag populer dengan sekali query
     popular_tags = (
@@ -80,7 +70,6 @@ def blog_view(request):
         'popular_tags': popular_tags, #tag yang ditampilkan
         'get_category' : get_category,
         'popular_post': popular_post,
-        'search_query': search_query,  # tambahkan search query ke context
     }
     return render (request, 'blog/blog.html', context)
 
@@ -166,6 +155,10 @@ def category_view(request,slug_cat ):
         .order_by('-publish')
     )
     
+    paginate = Paginator(posts,4)
+    get_number = request.GET.get('page')
+    get_post_category = paginate.get_page(get_number)
+    
     # Ambil 3 artikel dengan views terbanyak di category ini
     popular_post_category = (
     Post.objects.filter(category=current_category)
@@ -182,10 +175,50 @@ def category_view(request,slug_cat ):
     
     context = {
         'title' : f"Category-{current_category.title_cat}",
-        'posts' : posts,
+        'posts' : get_post_category,
         'popular_post_category' : popular_post_category,
         'popular_tag' : popular_tag,
         'current_category' : current_category,
         'category' : category
     }
     return render(request,'blog/category.html', context)
+
+def tag_view(request, slug):
+    # all tag
+    all_tag = Tag.objects.annotate(post_count=Count('taggit_taggeditem_items')).order_by('-post_count')
+    
+    # ambil tag yang sedang dibuka + jumlah post
+    get_tag = get_object_or_404 (
+        Tag.objects.annotate(
+            post_count=Count('taggit_taggeditem_items', distinct=True) 
+        ),
+        slug=slug
+    )
+    
+    post = (
+        Post.objects.filter(tags=get_tag) #filter sesuai dengan kondisi
+        .select_related('category', 'user') #join setiap postingan ke foreignkey
+        .prefetch_related('tags') #join query ManyToManyField Tag
+        .order_by('-publish') 
+    )
+    
+    paginate = Paginator(post, 4)
+    page_number = request.GET.get('page')
+    get_post_tag = paginate.get_page(page_number)
+    
+    # Ambil 3 postingan dengan views terbanyak di tag ini
+    popular_post_tag = (
+    Post.objects.filter(tags=get_tag)
+    .select_related('user', 'category')
+    .order_by('-views')[:3]
+    )
+    
+    context = {
+        'title': f"Tag - {slug}",
+        'get_tag': get_tag,
+        'all_tag': all_tag,
+        'popular_post_tag' : popular_post_tag,
+        'posts' : get_post_tag
+    }
+    
+    return render(request, 'blog/tag.html', context)

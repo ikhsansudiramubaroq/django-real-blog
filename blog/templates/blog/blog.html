@@ -149,7 +149,7 @@
                         <div class="d-flex flex-wrap gap-2">
                             
                             {% for pop_tag in popular_tags %}    
-                            <a href="tag.html" class="badge bg-light text-dark text-decoration-none p-2">{{pop_tag}}</a>
+                            <a href="{% url 'blog:tag_view' pop_tag.slug %} " class="badge bg-light text-dark text-decoration-none p-2">{{pop_tag}}</a>
                             {% endfor %}
                                 
                         </div>
@@ -185,9 +185,10 @@
                         <div class="card border-0 p-4" style="background-color: var(--pastel-pink);">
                             <h5>Stay Updated</h5>
                             <p class="small">Get the latest tutorial posts delivered straight to your inbox.</p>
-                            <form>
+                            <form method="POST" action="{% url 'contact:newsletter_subscribe' %}">
+                                {% csrf_token %}
                                 <div class="mb-3">
-                                    <input type="email" class="form-control" placeholder="Enter your email">
+                                    <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
                                 </div>
                                 <button type="submit" class="btn btn-auth btn-auth-primary w-100">Subscribe</button>
                             </form>

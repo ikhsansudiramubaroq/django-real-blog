@@ -3,8 +3,10 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 # Import Form dari file forms.py di aplikasi yang sama
 from .forms import PostForm
 from blog.models import Post, Category, Comment
+from django.core.paginator import Paginator
 from .models import AuthorProfile
 from django.db.models import Count, F, Q
+from taggit.models import Tag
 
 # Create your views here.
 # Asumsi: Kamu sudah memindahkan atau memastikan fungsi ini ada di sini atau di utility.py
@@ -119,6 +121,10 @@ def view_author(request, slug_author):
     user = detail_author.user #ambil user yang terkait dengan author
     post = Post.objects.filter(user=user)
     
+    paginate= Paginator(post, 4)
+    page_number = request.GET.get('page')
+    get_post_author = paginate.get_page(page_number)
+    
     # LOGIKA EFISIEN UNTUK MENGAMBIL CATEGORY + COUNT DALAM 1 QUERY + SESUAI AUTHORNYA
     get_category = (
         Category.objects
@@ -128,15 +134,23 @@ def view_author(request, slug_author):
         .distinct()                             #biar ga dobel kalau join
     )
     
+    get_tag = (
+        Tag.objects
+        .filter(post__user=user)
+        .annotate(tag_count=Count('post'))
+        .order_by('-tag_count')
+    )
+    
     
     # ambil semua komentar dari postingan milik author ini
-    comments = Comment.objects.filter(post__user=user)
+    comments = Comment.objects.filter(post__user=user).order_by('-timestamp')[:5]
     
     context ={
         'title' : 'View Author',
         'detail_author' : detail_author,
-        'posts' : post,
+        'posts' : get_post_author,
         'get_category' : get_category,
+        'get_tag' : get_tag,
         'comment' : comments,
     }
     return render (request, 'author/author.html',context)

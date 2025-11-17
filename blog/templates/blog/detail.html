@@ -17,7 +17,7 @@
                     class="detail-hero img-fluid" alt="Detail Artikel">
                     
                     <div class="detail-meta">
-                        <a href="category.html?category=Tutorial" class="badge-category text-decoration-none">{{ detail_post.category }}</a>
+                        <a href="{% url 'blog:category_view' detail_post.category.slug_cat %}" class="badge-category text-decoration-none">{{ detail_post.category }}</a>
                         <span class="article-date">{{ detail_post.publish }}</span>
                         <div class="article-views ms-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
@@ -34,7 +34,7 @@
                         <span class="me-2">Tags:</span>
                         {% for t in tags %}
                             {% comment %} <a href="{% url 'blog:tag_detail' t.slug %}" class="badge bg-light text-dark text-decoration-none me-1">{{ t.name }}</a> {% endcomment %}
-                            <a href="#" class="badge bg-light text-dark text-decoration-none me-1">{{ t.name }}</a>
+                            <a href="{% url 'blog:tag_view' t.slug %}" class="badge bg-light text-dark text-decoration-none me-1">{{ t.name }}</a>
                         {% empty %}
                             <span class="text-muted">Tidak ada tag</span>
                         {% endfor %}

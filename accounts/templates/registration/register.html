@@ -66,9 +66,16 @@
                             <small class="text-danger">{{ error }}</small>
                         {% endfor %}
                     </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="{{ form.is_author.auto_id }}"
+                            name="{{ form.is_author.name }}" {% if form.is_author.value %}checked{% endif %}>
+                        <label class="form-check-label" for="{{ form.is_author.auto_id }}">
+                            {{ form.is_author.label }}
+                        </label>
+                    </div>
                     <button class="btn btn-auth btn-auth-primary" type="submit">Register</button>
                     <div class="auth-link">
-                        <small>Already have an account? <a href="{% url "accounts:login" %}">Login</a></small>
+                        <small>Already have an account? <a href="{% url 'accounts:login' %}">Login</a></small>
                     </div>
                 </div>
                 </form>
