@@ -16,35 +16,36 @@ class UserManager(BaseUserManager):
             raise ValueError("Pengguna harus memiliki email !")
         if not nama:
             raise ValueError("Nama Harus diisi")
-        
+
         # buat instance user berdasarkan class yang menunjuk object UserManager()
         user = self.model(
             email = self.normalize_email(email),
-            nama=nama
+            nama=nama,
+            date_joined=timezone.now()  # Set date_joined when creating user
         )
-        
+
         # ambil password dari parameter password
         user.set_password(password)
         user.save(using=self.db)
-        
+
         return user
-    
+
     def create_superuser(self, nama, email, password):
         # pada superuser lempar parameter dengan urutan yang sama ke create_user dan dikelola sebagai user biasa dulu
         user = self.create_user(nama, email,password)
-        
+
         # Tambahkan hak akses admin
         user.is_admin = True       # Menandakan user adalah admin (custom field)
         user.is_staff = True       # Agar bisa akses Django Admin
         user.is_superuser = True   # Semua hak tanpa batas
-        
-        # Update perubahan hak akses & simpan ke database karna prosesnya user disimpan sebagai user biasa yang di kelola create_user 
+
+        # Update perubahan hak akses & simpan ke database karna prosesnya user disimpan sebagai user biasa yang di kelola create_user
         user.save(using=self._db)
-        
+
         return user
 
 # NOTED:
-# Dengan kata lain: Model (AbstractBaseUser/User) menentukan APA isinya, 
+# Dengan kata lain: Model (AbstractBaseUser/User) menentukan APA isinya,
 # sementara Manager (BaseUserManager) menentukan BAGAIMANA isinya dibuat dan diatur.
 
 # Create your models here.
@@ -53,7 +54,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('user', 'User Biasa'),
         ('author', 'Penulis'),
     )
-    
+
     nama = models.CharField(max_length=100)
     job = models.CharField(max_length=50)
     tempat_lahir = models.CharField(max_length=50)
@@ -66,14 +67,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-    
+    date_joined = models.DateTimeField(default=timezone.now)  # Add date_joined field
+
     # control class user oleh UserManager()
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    
+
     REQUIRED_FIELDS = ['nama']
-    
+
     # __str__ = tampilan representasi teks dari objek, biar lebih mudah dibaca manusia.
     def __str__(self):
         return self.email
@@ -81,17 +83,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def has_perm(self, perm, obj=None):
         # Semua user punya permission (disederhanakan)
         return True
-    
+
     def has_module_perms(self, app_label):
         # Semua user bisa akses semua modul (disederhanakan)
         return True
-    
-
-class Follow(models.Model):
-    follower = models.ForeignKey(User, related_name='following', on_delete=models.CASCADE)
-    following = models.ForeignKey(User, related_name='followers', on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        # Pastikan satu user hanya bisa follow user lain sekali
-        unique_together = ('follower', 'following')

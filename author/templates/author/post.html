@@ -3,18 +3,11 @@
 <!-- Begin Page Content -->
 {% block content %}
                 <div class="container-fluid">
-                    <a href="{% url 'author:create_post' %}">Tambah Postingan</a>
-
-                    <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Tables {{ request.user }} </h1>
-                    <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
-                        For more information about DataTables, please visit the <a target="_blank"
-                            href="https://datatables.net">official DataTables documentation</a>.</p>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">List Publish Post</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -31,7 +24,7 @@
                                     <tbody>
                                         {% for post in get_post %}
                                             <tr>
-                                                <td> {{ post.id }} </td>
+                                                <td> {{ forloop.counter }} </td>
                                                 <td> {{ post.title_post }} </td>
                                                 <td> {{ post.category }} </td>
                                                 <td> {{ post.status }} </td>
@@ -49,4 +42,5 @@
 
             </div>
             <!-- End of Main Content -->
+            {% include "author/partials/footer.html" %}
             {% endblock content %}

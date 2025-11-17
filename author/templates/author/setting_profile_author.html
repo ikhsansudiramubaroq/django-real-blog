@@ -1,0 +1,257 @@
+{% extends "author/dashboard_author.html" %}
+{% load static %}
+<!-- Begin Page Content -->
+{% block content %}
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Setting Profile</h1>
+                    </div>
+
+                    <!-- Profile Card -->
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <!-- Form Edit Profile -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Edit Profile Information</h6>
+                                </div>
+                                <div class="card-body">
+                                    <form id="profileForm">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <label for="nama">Full Name</label>
+                                            <input type="text" class="form-control" id="nama" name="nama" value="{{ user.nama }}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="email">Email</label>
+                                            <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="job">Job</label>
+                                            <input type="text" class="form-control" id="job" name="job" value="{{ user.job }}">
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label for="tempat_lahir">Place of Birth</label>
+                                                <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" value="{{ user.tempat_lahir }}">
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="tanggal_lahir">Date of Birth</label>
+                                                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="{{ user.tanggal_lahir|date:'Y-m-d' }}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="no_hp">Phone Number</label>
+                                            <input type="text" class="form-control" id="no_hp" name="no_hp" value="{{ user.no_hp }}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="role">Role</label>
+                                            <select class="form-control" id="role" name="role" disabled>
+                                                <option value="user" {% if user.role == 'user' %}selected{% endif %}>User Biasa</option>
+                                                <option value="author" {% if user.role == 'author' %}selected{% endif %}>Penulis</option>
+                                            </select>
+                                            <small class="form-text text-muted">Role cannot be changed here</small>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="bio">Bio</label>
+                                            <textarea class="form-control" id="bio" name="bio" rows="3">{{ user.author_profile.bio|default:"" }}</textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="instagram">Instagram URL</label>
+                                            <input type="url" class="form-control" id="instagram" name="instagram" value="{{ user.author_profile.social_media.instagram|default:'' }}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="linkedin">LinkedIn URL</label>
+                                            <input type="url" class="form-control" id="linkedin" name="linkedin" value="{{ user.author_profile.social_media.linkedin|default:'' }}">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary" id="saveBtn">Save Changes</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <!-- Profile Picture Card -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3 text-center">
+                                    <h6 class="m-0 font-weight-bold text-primary">Profile Picture</h6>
+                                </div>
+                                <div class="card-body text-center">
+                                    <img src="{{ user.img_user.url }}" class="img-profile rounded-circle mb-4" id="profileImagePreview" alt="Profile" style="width: 150px; height: 150px; object-fit: cover;">
+                                    <form id="profilePicForm" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <div class="custom-file mb-3">
+                                            <input type="file" class="custom-file-input" id="img_user" name="img_user" accept="image/*">
+                                            <label class="custom-file-label" for="img_user">Choose file</label>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Upload Picture</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Additional Information Card -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Account Information</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>Member Since:</strong> {{ user.date_joined|date:"F d, Y" }}</p>
+                                    <p><strong>Last Login:</strong> {{ user.last_login|date:"F d, Y H:i" }}</p>
+                                    <p><strong>Status:</strong>
+                                        <span class="badge badge-{% if user.is_active %}success{% else %}warning{% endif %}">
+                                            {% if user.is_active %}Active{% else %}Inactive{% endif %}
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Success Message Modal -->
+            <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="successModalLabel">Success</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" id="modalMessage">Profile updated successfully!</div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" type="button" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% include "author/partials/footer.html" %}
+
+            <script>
+                document.getElementById('profileForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    const data = {
+                        nama: document.getElementById('nama').value,
+                        email: document.getElementById('email').value,
+                        job: document.getElementById('job').value,
+                        tempat_lahir: document.getElementById('tempat_lahir').value,
+                        tanggal_lahir: document.getElementById('tanggal_lahir').value,
+                        no_hp: document.getElementById('no_hp').value,
+                        bio: document.getElementById('bio').value,
+                        social_media: {
+                            instagram: document.getElementById('instagram').value,
+                            linkedin: document.getElementById('linkedin').value
+                        }
+                    };
+
+                    // Disable save button and show loading state
+                    const saveBtn = document.getElementById('saveBtn');
+                    saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...';
+                    saveBtn.disabled = true;
+
+                    fetch('{% url "author:profile_update" %}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Re-enable save button
+                        saveBtn.innerHTML = 'Save Changes';
+                        saveBtn.disabled = false;
+
+                        if (data.success) {
+                            document.getElementById('modalMessage').textContent = 'Profile updated successfully!';
+                            $('#successModal').modal('show');
+                        } else {
+                            alert('Error updating profile: ' + (data.error || 'Unknown error'));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        // Re-enable save button
+                        saveBtn.innerHTML = 'Save Changes';
+                        saveBtn.disabled = false;
+                        alert('Error updating profile: ' + error);
+                    });
+                });
+
+                document.getElementById('profilePicForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    const formData = new FormData();
+                    const fileInput = document.getElementById('img_user');
+
+                    if (fileInput.files.length === 0) {
+                        alert('Please select an image file first.');
+                        return;
+                    }
+
+                    formData.append('img_user', fileInput.files[0]);
+                    formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+
+                    // Show loading state
+                    const uploadBtn = document.querySelector('#profilePicForm .btn');
+                    uploadBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Uploading...';
+                    uploadBtn.disabled = true;
+
+                    fetch('{% url "author:profile_picture_update" %}', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Re-enable button
+                        uploadBtn.innerHTML = 'Upload Picture';
+                        uploadBtn.disabled = false;
+
+                        if (data.success) {
+                            // Update the profile image
+                            document.getElementById('profileImagePreview').src = data.image_url + '?t=' + new Date().getTime();
+                            document.getElementById('modalMessage').textContent = 'Profile picture updated successfully!';
+                            $('#successModal').modal('show');
+                        } else {
+                            alert('Error updating profile picture: ' + (data.error || 'Unknown error'));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        // Re-enable button
+                        uploadBtn.innerHTML = 'Upload Picture';
+                        uploadBtn.disabled = false;
+                        alert('Error updating profile picture: ' + error);
+                    });
+                });
+
+                // Update label when file is selected
+                document.getElementById('img_user').addEventListener('change', function(e) {
+                    const fileName = e.target.files[0] ? e.target.files[0].name : 'Choose file';
+                    const label = e.target.nextElementSibling;
+                    label.textContent = fileName;
+
+                    // Preview image if it's a valid image
+                    if (e.target.files[0]) {
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            document.getElementById('profileImagePreview').src = event.target.result;
+                        }
+                        reader.readAsDataURL(e.target.files[0]);
+                    }
+                });
+            </script>
+{% endblock content %}
