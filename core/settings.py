@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     'blog',
     'accounts',
     'author',
@@ -56,6 +56,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+    # custom middleware blok author ke halaman blog biasa
+    'accounts.middleware.block_author_on_blog.BlockAuthorOnBlogMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -143,9 +146,8 @@ STATICFILES_DIRS = [BASE_DIR / 'static'  # Path folder static utama di root proj
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR / 'media')
 
-# URL tujuan setelah login yaitu url redirect_by_role (sesuaikan rolenya) dan logout -> (url accounts:index)
+# URL tujuan setelah login yaitu url redirect_by_role (sesuaikan rolenya) dan logout -> (url accounts:login)
 LOGIN_REDIRECT_URL = 'accounts:redirect_by_role'
-LOGOUT_REDIRECT_URL = 'accounts:index'
 
 # custom user
 AUTH_USER_MODEL = 'accounts.User'

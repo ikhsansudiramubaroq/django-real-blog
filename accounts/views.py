@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect 
 from django.contrib.auth import logout as Logout
 from .forms import RegisterUserForm
+from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required, user_passes_test
 
 
@@ -16,13 +17,25 @@ def is_reader(user):
 # END CEK ROLE
 
 # Create your views here.
-# PROFILE USER
-@login_required
-def index_profile(request):
-    context = {
-        'title' : 'Halaman Profile User'
-    }
-    return render(request, 'profile_user.html', context)
+
+# fungsi custom login view for session
+class CustomLoginView(LoginView):
+    template_name = 'registration/login.html'
+    extra_context = {'title': 'Pastel Blog - Login'}
+    
+    # ketika login sukses → kita override method ini
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        user = self.request.user
+        
+        # Jika role-nya "author" → session habis saat browser ditutup
+        if user.role == "author":
+            self.request.session.set_expiry(0)
+        else:
+            # User biasa → session panjang (2 minggu)
+            self.request.session.set_expiry(1209600)
+        
+        return response
 
 # fungsi register user
 def register_user(request):
