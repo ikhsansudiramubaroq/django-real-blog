@@ -57,7 +57,7 @@ class PostForm(forms.ModelForm):
 
         # Exclude field yang diisi secara otomatis atau tidak perlu ditampilkan
         # Kita tidak perlu menampilkan 'user', 'views', 'slug_post', 'publish', 'update', 'likes'
-        exclude = ('user', 'slug_post', 'views', 'likes')
+        exclude = ('user', 'slug_post', 'views')
 
     # Catatan Tambahan:
     # Field 'user' akan diisi secara otomatis di views.py saat Author menyimpan form.

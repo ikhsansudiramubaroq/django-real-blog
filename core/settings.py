@@ -58,7 +58,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     
     # custom middleware blok author ke halaman blog biasa
-    'accounts.middleware.block_author_on_blog.BlockAuthorOnBlogMiddleware',
+    'middleware.block_author_on_blog.BlockAuthorOnBlogMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'

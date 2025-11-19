@@ -1,0 +1,46 @@
+{% extends "author/dashboard_author.html" %} 
+{% load static %}
+<!-- Begin Page Content -->
+{% block content %}
+                <div class="container-fluid">
+
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">List Comment Post</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Title Blog</th>
+                                            <th>User</th>
+                                            <th>Comment</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for comment in get_comment %}
+                                            <tr>
+                                                <td> {{ forloop.counter }} </td>
+                                                <td> {{ comment.post.title_post }} </td>
+                                                <td> {{ comment.user.nama }} </td>
+                                                <td> {{ comment.comments }} </td>
+                                                <td> Hapus </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+            {% include "author/partials/footer.html" %}
+            {% endblock content %}

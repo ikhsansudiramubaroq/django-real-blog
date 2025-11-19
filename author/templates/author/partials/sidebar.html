@@ -19,7 +19,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{% url 'author:author_index' %}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -31,13 +31,6 @@
             <div class="sidebar-heading">
                 Interface
             </div>
-
-            <!-- Analytic -->
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'author:list_post' %}">
-                    <i class="fas fa-fw fa-chart-bar"></i>
-                    <span>Analytics</span></a>
-            </li>
 
             <!-- Post -->
             <li class="nav-item">
@@ -56,13 +49,6 @@
                 </div>
             </li>
 
-            <!-- Followers -->
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'author:list_post' %}">
-                    <i class="fas fa-fw fa-heart"></i>
-                    <span>Followers</span></a>
-            </li>
-
             <!-- Account -->
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'author:setting_profile' %}">
@@ -72,7 +58,7 @@
 
             <!-- Comment -->
             <li class="nav-item">
-                <a class="nav-link" href="tables.html">
+                <a class="nav-link" href="{% url 'author:author_comment' %}">
                     <i class="fas fa-fw fa-comment"></i>
                     <span>Comment</span></a>
             </li>

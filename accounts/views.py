@@ -4,17 +4,10 @@ from .forms import RegisterUserForm
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required, user_passes_test
 
+# IMPORT UTILS
+from .utils import is_author,is_reader
 
 
-# FUNGSI CEK AUTHOR ATAU USER BIASA
-def is_author(user):
-    """Fungsi untuk memeriksa apakah user adalah Author."""
-    return user.is_authenticated and user.role == 'author'
-
-def is_reader(user):
-    """Fungsi untuk memeriksa apakah user adalah Pembaca biasa."""
-    return user.is_authenticated and user.role == 'user'
-# END CEK ROLE
 
 # Create your views here.
 
@@ -92,13 +85,3 @@ def author_dashboard(request):
 def logout(request):
     Logout(request)
     return redirect('accounts:login')
-
-
-# FUNGSI BUAT POSTINGAN PINDAHKAN KE APP AUTHOR
-# @login_required
-# @user_passes_test(is_author, login_url='/login/')
-# def author_create_post(request):
-#     # Logika view untuk membuat artikel baru
-#     # ...
-#     context = {}
-#     return render(request, 'author/create_post.html', context)
