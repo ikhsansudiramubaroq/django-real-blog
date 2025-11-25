@@ -8,6 +8,7 @@ urlpatterns = [
     path('list_post/', post, name='list_post'),
     path('draft_post/', draft_post, name='draft_post'),
     path('create_post/', create_post, name='create_post'),
+    path('edit_post/<slug:slug_post>', edit_post, name='edit_post'),
     path('comment', comment_author, name='author_comment'),
 
     # profile setting
@@ -18,6 +19,6 @@ urlpatterns = [
     # end dashboard view author
 
     # page view profile author (FE)
-    path('author/<slug:slug_author>',view_author, name="view_author"),
+    path('<slug:slug_author>/',view_author, name="view_author"),
 
 ]

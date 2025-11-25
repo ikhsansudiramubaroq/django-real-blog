@@ -12,10 +12,10 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    
-                    <img src="{{ detail_post.images_post.url }}" style="width: 100%; height: auto; object-fit: contain; border-radius: 10px;" 
+
+                    <img src="{{ detail_post.images_post.url }}" style="width: 100%; height: auto; object-fit: contain; border-radius: 10px;"
                     class="detail-hero img-fluid" alt="Detail Artikel">
-                    
+
                     <div class="detail-meta">
                         <a href="{% url 'blog:category_view' detail_post.category.slug_cat %}" class="badge-category text-decoration-none">{{ detail_post.category }}</a>
                         <span class="article-date">{{ detail_post.publish }}</span>
@@ -27,9 +27,9 @@
                             <span class="ms-1">{{ detail_post.views }}</span>
                         </div>
                     </div>
-                    
+
                     <h1 class="detail-title">{{ detail_post.title_post }}</h1>
-                    
+
                     <div class="article-tags mb-4">
                         <span class="me-2">Tags:</span>
                         {% for t in tags %}
@@ -39,16 +39,20 @@
                             <span class="text-muted">Tidak ada tag</span>
                         {% endfor %}
                     </div>
-                    
+
                     <div class="author-card">
                         <img src=" {{ detail_post.user.img_user.url }} " class="author-card-avatar" alt="">
                         <div class="author-card-info flex-grow-1">
                             <h5>{{ detail_post.user.nama }}</h5>
                             <p>{{ detail_post.user.job }}</p>
                         </div>
-                        <a href="{% url 'author:view_author' slug_author=detail_post.user.author_profile.slug_author %}" class="btn-view-profile">View Profile</a>
+                        {% if slug_author %}
+                            <a href="{% url 'author:view_author' slug_author %}" class="btn btn-login">View Profile</a>
+                        {% else %}
+                            <span>No Profile</span>
+                        {% endif %}
                     </div>
-                    
+
                     <div class="article-content">
                         <p class="lead" id="post-content">
                             {{ detail_post.fill|truncatechars:300 }}
@@ -59,12 +63,12 @@
                             {% endif %}
                         </p>
                     </div>
-                    
+
                     <div class="comments-section">
                         <h4 class="comments-title">Comments {{ comments.count }} </h4>
-                        
+
                         <!-- Login to Comment (tampilkan jika belum login) -->
-                        
+
                         {% if request.user.is_authenticated %}
                             <!-- Comment Form (tampilkan jika sudah login) -->
                         <div class="comment-form" id="commentForm">
@@ -86,8 +90,8 @@
                             <a href="{% url 'accounts:login' %}" class="btn btn-login">Login to Comment</a>
                         </div>
                         {% endif %}
-                        
-                            
+
+
                         <!-- Comment List -->
                         {% for comment in comments  %}
                         <div class="comment-item">
@@ -102,16 +106,16 @@
                                         <p>{{ comment.comments }} </p>
                                         <!-- Tombol Reply -->
                                         {% if request.user.is_authenticated %}
-                                        <button 
-                                            type="button" 
-                                            class="btn btn-sm btn-outline-secondary toggle-reply" 
+                                        <button
+                                            type="button"
+                                            class="btn btn-sm btn-outline-secondary toggle-reply"
                                             data-comment-id="{{ comment.id }}">
                                             Reply
                                         </button>
                                         {% endif %}
                                         {% comment %} <button class="btn-reply">Reply</button> {% endcomment %}
                                     </div>
-                                    
+
                                     <!-- Nested Reply -->
                                     {% for reply in comment.replies.all  %}
                                     <div class="comment-reply">
@@ -152,11 +156,11 @@
                             </div>
                         </div>
                         {% endfor %}
-                        
+
                     </div>
                 </div>
             </div>
-                
+
             <div class="row">
                 <!-- Sidebar -->
                 <div class="col-lg-12">

@@ -105,10 +105,7 @@
                                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                             aria-labelledby="dropdownMenuLink">
                                             <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">View All</a>
-                                            <a class="dropdown-item" href="#">Mark as Read</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Settings</a>
+                                            <a class="dropdown-item" href="{% url 'author:author_comment' %}">View All</a>
                                         </div>
                                     </div>
                                 </div>
@@ -120,41 +117,19 @@
                                                 <tr>
                                                     <th>Post Title</th>
                                                     <th>Comment</th>
-                                                    <th>Author</th>
+                                                    <th>User</th>
                                                     <th>Date</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                {% for comment in recent_comment %}
                                                 <tr>
-                                                    <td><a href="#">How to Learn Python</a></td>
-                                                    <td>Great tutorial! Very helpful.</td>
-                                                    <td>John Doe</td>
-                                                    <td>2023-06-15</td>
+                                                    <td><a href="#">{{ comment.post.title_post }} </a></td>
+                                                    <td>{{comment.comments}}</td>
+                                                    <td>{{ comment.user.nama }} </td>
+                                                    <td>{{ comment.timestamp }} </td>
                                                 </tr>
-                                                <tr>
-                                                    <td><a href="#">Django Best Practices</a></td>
-                                                    <td>Thanks for sharing. Learned a lot!</td>
-                                                    <td>Jane Smith</td>
-                                                    <td>2023-06-14</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><a href="#">CSS Grid Tutorial</a></td>
-                                                    <td>Excellent explanation of grid concepts.</td>
-                                                    <td>Robert Johnson</td>
-                                                    <td>2023-06-14</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><a href="#">JavaScript Tips</a></td>
-                                                    <td>These tips saved me a lot of time.</td>
-                                                    <td>Emily Wilson</td>
-                                                    <td>2023-06-13</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><a href="#">Web Development Trends</a></td>
-                                                    <td>Interesting insights on the future.</td>
-                                                    <td>Michael Brown</td>
-                                                    <td>2023-06-12</td>
-                                                </tr>
+                                                {% endfor %}
                                             </tbody>
                                         </table>
                                     </div>
@@ -222,10 +197,9 @@
                                     <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
                                 </div>
                                 <div class="card-body">
-                                    <a href="#" class="btn btn-primary btn-block mb-2">Create New Post</a>
-                                    <a href="#" class="btn btn-success btn-block mb-2">Review Comments</a>
-                                    <a href="#" class="btn btn-info btn-block mb-2">Update Profile</a>
-                                    <a href="#" class="btn btn-warning btn-block">View Analytics</a>
+                                    <a href="{% url 'author:create_post' %}" class="btn btn-primary btn-block mb-2">Create New Post</a>
+                                    <a href="{% url 'author:author_comment' %}" class="btn btn-success btn-block mb-2">Review Comments</a>
+                                    <a href="{% url 'author:setting_profile' %}" class="btn btn-info btn-block mb-2">Update Profile</a>
                                 </div>
                             </div>
                         </div>
@@ -239,20 +213,12 @@
                                 <div class="card-body">
                                     <div class="row text-center">
                                         <div class="col-md-6 mb-3">
-                                            <div class="text-gray-800 font-weight-bold">Views This Week</div>
-                                            <div class="h5 text-gray-800">1,245</div>
+                                            <div class="text-gray-800 font-weight-bold">Total Views</div>
+                                            <div class="h5 text-gray-800">{{total_views.total}}</div>
                                         </div>
                                         <div class="col-md-6 mb-3">
-                                            <div class="text-gray-800 font-weight-bold">Avg. Engagement</div>
-                                            <div class="h5 text-gray-800">4.2s</div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="text-gray-800 font-weight-bold">Comments/Post</div>
-                                            <div class="h5 text-gray-800">8.5</div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="text-gray-800 font-weight-bold">Shares</div>
-                                            <div class="h5 text-gray-800">24</div>
+                                            <div class="text-gray-800 font-weight-bold">Views This Week</div>
+                                            <div class="h5 text-gray-800">{{total_views.week}}</div>
                                         </div>
                                     </div>
                                 </div>

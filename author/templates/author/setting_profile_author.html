@@ -157,6 +157,7 @@
                     saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...';
                     saveBtn.disabled = true;
 
+                    // START kirim data ke view lewat url django
                     fetch('{% url "author:profile_update" %}', {
                         method: 'POST',
                         headers: {
@@ -165,6 +166,10 @@
                         },
                         body: JSON.stringify(data)
                     })
+                    // END kirim data ke view lewat url django
+                    
+
+                    // START response dari js yang dikirim ke user kalau berhasil atau gagal
                     .then(response => response.json())
                     .then(data => {
                         // Re-enable save button
@@ -185,8 +190,11 @@
                         saveBtn.disabled = false;
                         alert('Error updating profile: ' + error);
                     });
+                    // END response dari js yang dikirim ke user kalau berhasil atau gagal
                 });
+                
 
+                // Fungsi untuk Upload Picture Profile
                 document.getElementById('profilePicForm').addEventListener('submit', function(e) {
                     e.preventDefault();
 

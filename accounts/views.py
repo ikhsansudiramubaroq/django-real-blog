@@ -2,10 +2,10 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import logout as Logout
 from .forms import RegisterUserForm
 from django.contrib.auth.views import LoginView
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 
-# IMPORT UTILS
-from .utils import is_author,is_reader
+# IMPORT SERVICES
+from .services import session_service as ss , role_service as rs
 
 
 
@@ -19,15 +19,8 @@ class CustomLoginView(LoginView):
     # ketika login sukses → kita override method ini
     def form_valid(self, form):
         response = super().form_valid(form)
-        user = self.request.user
-        
-        # Jika role-nya "author" → session habis saat browser ditutup
-        if user.role == "author":
-            self.request.session.set_expiry(0)
-        else:
-            # User biasa → session panjang (2 minggu)
-            self.request.session.set_expiry(1209600)
-        
+        # masukkan session expiry dari folder services
+        ss.apply_session_policy(self.request, self.request.user)
         return response
 
 # fungsi register user
@@ -63,23 +56,9 @@ def register_user(request):
 @login_required # Pastikan hanya user yang sudah login yang bisa mengakses ini
 def redirect_by_role(request):
     user = request.user
-    
-    if is_author(user):
-        # Arahkan Author ke dashboard khusus
-        return redirect('author:author_index')
-    
-    # Semua user lain (Pembaca) diarahkan ke halaman utama blog
-    return redirect('blog:blog_index')
 
-# FUNGSI CEK AUTHOR
-@login_required
-@user_passes_test(is_author, login_url='accounts:login') # Jika gagal, arahkan ke /login/
-def author_dashboard(request):
-    # Logika view Dashboard Author
-    context = {
-        'title': 'Dashboard Author'
-    }
-    return render(request, 'author/dashboard_author.html', context)
+    # user menjadi parameter yang dikirim ke fungsi tersebut.
+    return redirect(rs.get_redirect_by_role(user))
 
 @login_required
 def logout(request):

@@ -7,10 +7,23 @@ from blog.models import Post, Category, Comment
 from author.models import AuthorProfile
 from accounts.models import User  # Import User models
 import json
+# import sum
+from django.db.models import Sum
+
+# import time
+from django.utils import timezone
+from datetime import timedelta
+
 # Import validator dan serializer
 from author.utils.validators import validate_email_format, validate_phone_number, validate_image_file
 from author.utils.serializers import serialize_post, serialize_comment, serialize_author_profile
 
+
+# Create your views here.
+def is_author(user):
+    """Memeriksa apakah user adalah Author berdasarkan field 'role'."""
+    # Asumsi field role == 'author'
+    return user.is_authenticated and user.role == 'author'
 
 def get_author_stats(user):
     """Mengambil statistik untuk dashboard author"""
@@ -25,22 +38,6 @@ def get_author_stats(user):
     )
     # Kembalikan hasil query statistik
     return stats
-
-
-def get_author_comments_count(user):
-    """Menghitung jumlah komentar untuk semua post milik author"""
-    # Hitung jumlah komentar dari post-post milik user
-    comment_count = Comment.objects.filter(post__user=user).count()
-    # Kembalikan hasil hitungan komentar
-    return comment_count
-
-
-def get_author_posts(user):
-    """Mengambil semua post milik author"""
-    # Query untuk mengambil post-post milik user
-    posts = Post.objects.filter(user=user)
-    # Kembalikan hasil query post
-    return [serialize_post(post) for post in posts]  # Kembalikan hasil dalam bentuk serialized
 
 
 def get_published_posts(user):
@@ -58,6 +55,16 @@ def get_draft_posts(user):
     # Kembalikan hasil query post draft
     return [serialize_post(post) for post in get_draft_post]  # Kembalikan hasil dalam bentuk serialized
 
+def get_author_comments_count(user):
+    """Menghitung jumlah komentar untuk semua post milik author"""
+    # Hitung jumlah komentar dari post-post milik user
+    comment_one_week_ago = timezone.now() - timedelta(days=7)
+    # __gte adalah Ambil semua Comment yang punya timestamp lebih besar atau sama dengan nilai one_week_ago.
+
+    comment_count = Comment.objects.filter(
+        post__user=user,timestamp__gte = comment_one_week_ago).count()
+    # Kembalikan hasil hitungan komentar
+    return comment_count
 
 def get_author_comments(user):
     """Mengambil komentar-komentar untuk post milik author"""
@@ -66,6 +73,27 @@ def get_author_comments(user):
     # Kembalikan hasil query komentar
     return [serialize_comment(comment) for comment in get_comment]  # Kembalikan hasil dalam bentuk serialized
 
+def get_recent_comment(user):
+    """Mengambil komentar-komentar untuk post milik author"""
+    # Query untuk mengambil komentar yang terkait dengan post milik user
+    # # __gte adalah Ambil semua Comment yang punya timestamp lebih besar atau sama dengan nilai one_week_ago.
+    comment_one_week_ago = timezone.now() - timedelta(days=7)
+    get_comment = Comment.objects.filter(
+        post__user=user,
+        timestamp__gte = comment_one_week_ago
+        ).order_by('-timestamp')[:5]
+    # Kembalikan hasil query komentar
+    return [serialize_comment(comment) for comment in get_comment]  # Kembalikan hasil dalam bentuk serialized
+
+def get_total_views(user):
+    views_one_week_ago = timezone.now() - timedelta(days=7)
+    total_views = Post.objects.filter(user=user).aggregate(total =Sum('views'))
+    views_week = Post.objects.filter(
+        user = user,
+        update__gte = views_one_week_ago
+    ).aggregate(week = Sum('views'))
+
+    return {'total':total_views['total'] or 0 ,'week': views_week['week'] or 0}
 
 def get_view_author_data(request, slug_author):
     """Mengambil data untuk halaman view author"""
@@ -73,8 +101,8 @@ def get_view_author_data(request, slug_author):
     from django.shortcuts import get_object_or_404
     detail_author = get_object_or_404(AuthorProfile, slug_author=slug_author)  # Ambil author berdasarkan slug
     user = detail_author.user  # Ambil user yang terkait dengan author
-    # Query untuk mengambil post milik user
-    post = Post.objects.filter(user=user)
+    # Query untuk mengambil post milik user dengan tags dan category
+    post = Post.objects.filter(user=user).prefetch_related('tags').select_related('category', 'user')
 
     # Buat objek paginator untuk membagi post
     paginate = Paginator(post, 4)  # Buat paginator dengan 4 post per halaman
@@ -100,8 +128,8 @@ def get_view_author_data(request, slug_author):
         .order_by('-tag_count')  # Urutkan dari paling banyak
     )
 
-    # Ambil 5 komentar terbaru dari post milik author
-    comments = Comment.objects.filter(post__user=user).order_by('-timestamp')[:5]  # Query untuk mengambil komentar
+    # Ambil 5 komentar terbaru dari post milik author dengan post yang terkait
+    comments = Comment.objects.filter(post__user=user).select_related('post', 'user').order_by('-timestamp')[:5]  # Query untuk mengambil komentar
 
     # Kembalikan semua data dalam bentuk dictionary
     return {
@@ -110,7 +138,7 @@ def get_view_author_data(request, slug_author):
         'posts': [serialize_post(post) for post in get_post_author],  # Post yang dipaginate dalam format serialized
         'get_category': get_category,  # Daftar kategori
         'get_tag': get_tag,  # Daftar tag
-        'comments': [serialize_comment(comment) for comment in comments],  # Komentar terbaru dalam format serialized
+        'comment': [serialize_comment(comment) for comment in comments],  # Komentar terbaru dalam format serialized
     }
 
 
