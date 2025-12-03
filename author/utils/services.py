@@ -1,12 +1,10 @@
 # services.py - Fungsi-fungsi business logic untuk app author
 
 from django.core.paginator import Paginator
-from django.db.models import Count, F, Q
+from django.db.models import Count, Q
 from taggit.models import Tag
 from blog.models import Post, Category, Comment
 from author.models import AuthorProfile
-from accounts.models import User  # Import User models
-import json
 # import sum
 from django.db.models import Sum
 
@@ -59,8 +57,8 @@ def get_author_comments_count(user):
     """Menghitung jumlah komentar untuk semua post milik author"""
     # Hitung jumlah komentar dari post-post milik user
     comment_one_week_ago = timezone.now() - timedelta(days=7)
+    
     # __gte adalah Ambil semua Comment yang punya timestamp lebih besar atau sama dengan nilai one_week_ago.
-
     comment_count = Comment.objects.filter(
         post__user=user,timestamp__gte = comment_one_week_ago).count()
     # Kembalikan hasil hitungan komentar
@@ -135,12 +133,16 @@ def get_view_author_data(request, slug_author):
     return {
         'detail_author': serialize_author_profile(detail_author),  # Detail author dalam format serialized
         'user': user,  # User yang terkait
-        'posts': [serialize_post(post) for post in get_post_author],  # Post yang dipaginate dalam format serialized
+        'posts': get_post_author,  # Post yang dipaginate
+        'serialize_post': [serialize_post(post) for post in get_post_author],  # Serialize tiap post dari Page object (pagination tetap pada 'posts')
         'get_category': get_category,  # Daftar kategori
         'get_tag': get_tag,  # Daftar tag
         'comment': [serialize_comment(comment) for comment in comments],  # Komentar terbaru dalam format serialized
     }
 
+# fungsi detail post
+# def get_detail_post (request, slug_post):
+#     pass
 
 def update_user_profile(request, data):
     """Perbarui informasi profile pengguna berdasarkan data JSON"""

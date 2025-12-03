@@ -34,28 +34,32 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <a class="btn btn-primary" href="{% url 'accounts:logout' %}">Logout</a>
                 </div>
             </div>
         </div>
     </div>
 
+
     <script src="{% static 'author/vendor/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'author/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-
+    <script src="{% static 'author/vendor/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'author/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
     <!-- Core plugin JavaScript-->
     <script src="{% static 'author/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
-
     <!-- Custom scripts for all pages-->
     <script src="{% static 'author/js/sb-admin-2.min.js' %} "></script>
-
     <!-- Page level plugins -->
     <script src="{% static 'author/vendor/chart.js/Chart.min.js' %}"></script>
-
     <!-- Page level custom scripts -->
     <script src="{% static 'author/js/demo/chart-area-demo.js' %} "></script>
     <script src="{% static 'author/js/demo/chart-pie-demo.js' %} "></script>
 
+    <script>
+    $(document).ready(function() {
+        $('#dataTable').DataTable();
+    });
+    </script>
     
 
 </body>

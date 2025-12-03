@@ -50,19 +50,15 @@
     <section class="py-4" style="background-color: var(--pastel-pink);">
         <div class="container">
             <div class="row text-center">
-                <div class="col-md-3 col-6 mb-3 mb-md-0" data-aos="zoom-in">
-                    <h3 class="fw-bold text-primary">{{posts|length}}</h3>
+                <div class="col-md-4 col-6 mb-3 mb-md-0" data-aos="zoom-in">
+                    <h3 class="fw-bold text-primary">{{posts.paginator.count}}</h3>
                     <p class="mb-0">Articles</p>
                 </div>
-                <div class="col-md-3 col-6 mb-3 mb-md-0" data-aos="zoom-in" data-aos-delay="100">
-                    <h3 class="fw-bold text-primary">2.4K</h3>
-                    <p class="mb-0">Followers</p>
-                </div>
-                <div class="col-md-3 col-6 mb-3 mb-md-0" data-aos="zoom-in" data-aos-delay="200">
+                <div class="col-md-4 col-6 mb-3 mb-md-0" data-aos="zoom-in" data-aos-delay="200">
                     <h3 class="fw-bold text-primary">3.2K</h3>
                     <p class="mb-0">Total Views</p>
                 </div>
-                <div class="col-md-3 col-6 mb-3 mb-md-0" data-aos="zoom-in" data-aos-delay="300">
+                <div class="col-md-4 col-6 mb-3 mb-md-0" data-aos="zoom-in" data-aos-delay="300">
                     <h3 class="fw-bold text-primary">127</h3>
                     <p class="mb-0">Comments</p>
                 </div>
@@ -79,7 +75,7 @@
 
                     <div class="row mt-4">
                         <!-- Article From Author -->
-                        {% for post in posts  %}
+                        {% for post in serialize_post  %}
                         <div class="col-md-6 mb-4" data-aos="fade-up">
                             <div class="article-card">
                                 <div class="position-relative">

@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+    {% block content %}
+
+    {% comment %} navbar {% endcomment %}
+    {% include "author/partials/navbar_detail_blog.html" %}
+    {% comment %} end navbar {% endcomment %}
+    <!-- Detail Content -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+
+                    <img src="{{ detail_post.images_post.url }}" style="width: 100%; height: auto; object-fit: contain; border-radius: 10px;"
+                    class="detail-hero img-fluid" alt="Detail Artikel">
+
+                    <div class="detail-meta">
+                        <a class="badge-category text-decoration-none disabled">{{ detail_post.category }}</a>
+                        <span class="article-date">{{ detail_post.publish }}</span>
+                        <div class="article-views ms-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                                <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+                                <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                            </svg>
+                            <span class="ms-1">{{ detail_post.views }}</span>
+                        </div>
+                    </div>
+
+                    <h1 class="detail-title">{{ detail_post.title_post }}</h1>
+
+                    <div class="article-tags mb-4">
+                        <span class="me-2">Tags:</span>
+                        {% for t in tags %}
+                            {% comment %} <a href="{% url 'blog:tag_detail' t.slug %}" class="badge bg-light text-dark text-decoration-none me-1">{{ t.name }}</a> {% endcomment %}
+                            <a class="badge bg-light text-dark text-decoration-none me-1">{{ t.name }}</a>
+                        {% empty %}
+                            <span class="text-muted">Tidak ada tag</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="author-card">
+                        <img src=" {{ detail_post.user.img_user.url }} " class="author-card-avatar" alt="">
+                        <div class="author-card-info flex-grow-1">
+                            <h5>{{ detail_post.user.nama }}</h5>
+                            <p>{{ detail_post.user.job }}</p>
+                        </div>
+                    </div>
+
+                    <div class="article-content">
+                        <p class="lead" id="post-content">
+                            {{ detail_post.fill|truncatechars:300 }}
+                            {% if detail_post.fill|length > 300 %}
+                                <span id="dots">...</span>
+                                <span id="more" style="display:none;">{{ detail_post.fill|safe }}</span>
+                                <button id="readMoreBtn" class="btn btn-link p-0">Lihat lebih banyak</button>
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <div class="comments-section">
+                        <h4 class="comments-title">Comments {{ comments.count }} </h4>
+
+                        <!-- Login to Comment (tampilkan jika belum login) -->
+
+                        {% if request.user.is_authenticated %}
+                            <!-- Comment Form (tampilkan jika sudah login) -->
+                        <div class="comment-form" id="commentForm">
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <h6>Leave a Comment</h6>
+                                <div class="mb-3">
+                                    {{ form.comments }}
+                                </div>
+                                <button class="btn btn-login">Post Comment</button>
+                            </form>
+                        </div>
+                        {% else %}
+                            <div class="login-to-comment" id="loginPrompt">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            <p>Please login to leave a comment</p>
+                            <a href="{% url 'accounts:login' %}" class="btn btn-login">Login to Comment</a>
+                        </div>
+                        {% endif %}
+
+
+                        <!-- Comment List -->
+                        {% for comment in comments  %}
+                        <div class="comment-item">
+                            <div style="display: flex; gap: 1rem;">
+                                <img src="{{ comment.user.img_user.url }}" class="author-avatar" style="width: 48px; height: 48px;" alt="{{ comment.user.nama }}">
+                                <div style="flex: 1;">
+                                    <div class="comment-content">
+                                        <div class="comment-header">
+                                            <h6 class="comment-author">{{comment.user.nama}}</h6>
+                                            <span class="comment-time">{{comment.timestamp}}</span>
+                                        </div>
+                                        <p>{{ comment.comments }} </p>
+                                        <!-- Tombol Reply -->
+                                        {% if request.user.is_authenticated %}
+                                        <button
+                                            type="button"
+                                            class="btn btn-sm btn-outline-secondary toggle-reply"
+                                            data-comment-id="{{ comment.id }}">
+                                            Reply
+                                        </button>
+                                        {% endif %}
+                                        {% comment %} <button class="btn-reply">Reply</button> {% endcomment %}
+                                    </div>
+
+                                    <!-- Nested Reply -->
+                                    {% for reply in comment.replies.all  %}
+                                    <div class="comment-reply">
+                                        <div style="display: flex; gap: 1rem;">
+                                            <img src=" {{ reply.user.img_user.url }} " class="author-avatar" style="width: 40px; height: 40px;" alt="{{ reply.user.nama }}">
+                                            <div style="flex: 1;">
+                                                <div class="comment-content">
+                                                    <div class="comment-header">
+                                                        <h6 class="comment-author" style="font-size: 0.95rem;">{{ reply.user.nama }} </h6>
+                                                        <span class="comment-time">{{ reply.timestamp }} </span>
+                                                    </div>
+                                                    <p style="font-size: 0.95rem;">{{ reply.comments }} </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+
+                                    <!-- Reply Form (Initially Hidden) -->
+                                    {% if request.user.is_authenticated %}
+                                    <div class="reply-form-container" style="display: none; margin-top: 15px;">
+                                        <div class="d-flex align-items-center mt-2">
+                                            <div class="flex-grow-1 ms-3">
+                                                <form method="post" class="reply-form" id="reply-form-{{ comment.id }}" style="display: none;">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="reply_slug" value="{{ comment.id }}">
+                                                    {{ form.comments }}
+                                                    <div class="d-flex justify-content-between mt-2">
+                                                        <button type="submit" class="btn btn-primary mr-auto shadow-sm text-white">Reply</button>
+                                                        <button type="button" class="btn btn-outline-secondary cancel-reply">Cancel</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    {% endblock content %}
+    {% include "partials/footer.html" %}

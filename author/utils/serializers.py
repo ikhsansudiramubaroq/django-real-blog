@@ -1,11 +1,10 @@
-from django.utils.text import slugify
 # serializers.py - Fungsi-fungsi untuk mengubah data ke format yang bisa dikirim ke template atau API
 
 def serialize_post(post):
     """Konversi objek post ke format dictionary untuk dikirim ke template"""
-    # Ambil tags terlebih dahulu
+    # Ambil tags terlebih dahulu karna relasi many to many
     post_tags = [tag.name for tag in post.tags.all()]
-
+    
     # Konversi objek post ke format dictionary
     return {
         'id': post.id,  # ID post

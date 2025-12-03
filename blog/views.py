@@ -1,5 +1,4 @@
-from django.shortcuts import render,redirect, get_object_or_404
-from django.http import Http404
+from django.shortcuts import render, get_object_or_404
 from .models import *
 from django.core.paginator import Paginator
 from django.db.models import Count, F, Q

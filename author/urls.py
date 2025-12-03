@@ -8,8 +8,9 @@ urlpatterns = [
     path('list_post/', post, name='list_post'),
     path('draft_post/', draft_post, name='draft_post'),
     path('create_post/', create_post, name='create_post'),
-    path('edit_post/<slug:slug_post>', edit_post, name='edit_post'),
-    path('comment', comment_author, name='author_comment'),
+    path('edit_post/<slug:slug_post>/', edit_post, name='edit_post'),
+    path('detail_post/<slug:slug_post>/', detail_post, name='detail_post'),
+    path('comment/', comment_author, name='author_comment'),
 
     # profile setting
     path('setting_profile/', setting_profile_author, name='setting_profile'),

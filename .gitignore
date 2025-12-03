@@ -15,7 +15,8 @@ myvenv/                # Ini environment kamu sekarang → perlu diabaikan juga 
 catatan_alur_app.txt
 step.txt
 note.md
-
+todo.md
+note2.md
 # Django stuff
 db.sqlite3            # Database SQLite lokal, tidak perlu di-commit
 static/          # Folder hasil collectstatic (build output), akan digenerate ulang di server

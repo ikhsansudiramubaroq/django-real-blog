@@ -1,13 +1,18 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
+
 # Import Form dari file forms.py di aplikasi yang sama
 from .forms import PostForm
+from blog.forms import CommentsForm
+
+# import fungsi pada models
+from django.db.models import Count, F, Q
 
 # import models
 from .models import AuthorProfile
-from blog.models import Post
+from blog.models import Post, Comment
 
 # import json
 import json
@@ -28,6 +33,7 @@ def author_index(request):
     recent_comment = get_recent_comment(user)  # Panggil fungsi untuk mendapatkan jumlah komentar dari utils
     total_views = get_total_views(user)
     context = {  
+        'title' : 'Dashboard Author',
         'stats': stats,  # Tambahkan statistik ke konteks
         'comment_count': comment_count,  # Tambahkan jumlah komentar ke konteks
         'recent_comment': recent_comment,  # Tambahkan jumlah komentar ke konteks
@@ -47,6 +53,8 @@ def post(request):
     return render(request, 'author/post.html', context)  # Render template dengan konteks
 
 
+@login_required  # Memastikan user sudah login
+@user_passes_test(is_author, login_url='blog:blog_index')  # Memastikan user adalah Author, jika gagal redirect ke home
 def draft_post(request):
     get_draft_post = get_draft_posts(request.user)  # Panggil fungsi dari utils untuk mendapatkan draft post
     context = {  # Buat konteks untuk template
@@ -99,6 +107,77 @@ def edit_post(request, slug_post):
     }
     return render(request, 'author/create_post.html', context)  # Render template dengan konteks
 
+# detail view post
+@login_required
+@user_passes_test(is_author, login_url='blog:blog_index')  
+def detail_post(request, slug_post):
+    # Ambil satu post berdasarkan slug dengan relasi category, user, dan tags
+    detail_post = get_object_or_404(
+        Post.objects.select_related('category', 'user')
+        .prefetch_related('tags', 'user__author_profile'),slug_post=slug_post
+    )
+
+    # Akses hanya untuk pemilik post
+    if request.user != detail_post.user:
+        return redirect('author:list_post')
+    
+    # Ambil semua tag yang terkait dengan postingan ini
+    tags = detail_post.tags.all()
+
+    # Ambil artikel terkait
+    related_post = (
+        #cari artikel dengan tag sama
+        Post.objects.filter(
+            Q(tags__in=tags) | Q(category=detail_post.category)  #fallback kalau tag nggak cocok
+        )
+        .exclude(id=detail_post.id) #jangan tampilkan artikel yang sedang dibuka
+        .select_related('category', 'user')
+        .prefetch_related('tags')
+        .annotate(shared_tags=Count('tags')) #ranking berdasar jumlah tag sama
+        .order_by('-shared_tags', '-views')[:3] #urutkan tag terbanyak lalu views terbanyak
+    )
+
+    # Tambahkan counter views (opsional, efisien di PostgreSQL)
+    Post.objects.filter(pk=detail_post.pk).update(views=F('views') + 1)
+
+    # ambil comment sesuai dengan postingan terkait
+    comment_post = Comment.objects.filter(post=detail_post, reply=None).order_by('-timestamp')
+
+    # fungsi comment
+    if request.method == 'POST':
+        form = CommentsForm(request.POST or None)
+        if form.is_valid():
+            comment = request.POST.get('comments')
+            reply = request.POST.get('reply_slug')
+            comments_reply = None
+
+            if reply:
+                comments_reply = Comment.objects.get(id=reply)
+
+            comment = Comment.objects.create(post=detail_post,user=request.user,
+                                            comments=comment,reply=comments_reply)
+            form = CommentsForm()
+    else:
+        form=CommentsForm()
+
+    # Ambil slug_author dari author profile jika ada
+    slug_author = None
+    if hasattr(detail_post.user, 'author_profile'):
+        slug_author = detail_post.user.author_profile.slug_author
+
+    # tag = Tag.objects.all()
+    context = {
+        'title' : detail_post.title_post,
+        'detail_post' : detail_post,
+        'tags' : tags,
+        'related_post': related_post,
+        'form' : form,
+        'comments' : comment_post,
+        'slug_author': slug_author,
+    }
+    
+    return render (request, 'author/detail_view_post.html', context)
+
 
 # Profile setting view
 @login_required
@@ -146,7 +225,6 @@ def profile_picture_update(request):
 
 
 # comment author
-# Profile setting view
 @login_required
 @user_passes_test(is_author, login_url='blog:blog_index')
 def comment_author(request):
@@ -170,6 +248,7 @@ def view_author(request, slug_author):
         'title': 'View Author',  # Tambahkan judul ke konteks
         'detail_author': author_data['detail_author'],  # Tambahkan detail author ke konteks
         'posts': author_data['posts'],  # Tambahkan post ke konteks
+        'serialize_post': author_data['serialize_post'],  # Tambahkan post ke konteks
         'get_category': author_data['get_category'],  # Tambahkan kategori ke konteks
         'get_tag': author_data['get_tag'],  # Tambahkan tag ke konteks
         'comment': author_data['comment'],  # Tambahkan komentar terbaru ke konteks

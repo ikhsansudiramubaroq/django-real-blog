@@ -25,9 +25,11 @@
                                         {% for post in get_post %}
                                             <tr>
                                                 <td> {{ forloop.counter }} </td>
-                                                <td> {{ post.title_post }} </td>
+                                                <td> <a href="{% url 'author:detail_post' post.slug_post %}">
+                                                {{ post.title_post }}
+                                                </a></td>
                                                 <td> {{ post.category }} </td>
-                                                <td> {{ post.status }} </td>
+                                                <td><span class="badge badge-primary"> {{ post.status }} </span></td>
                                                 <td> <a href="{% url 'author:edit_post' post.slug_post %}"
                                                     class="btn btn-success">Edit</a> </td>
                                             </tr>
@@ -37,9 +39,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
-                <!-- /.container-fluid -->
-
             </div>
             {% endblock content %}

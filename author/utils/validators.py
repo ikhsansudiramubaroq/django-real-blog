@@ -38,11 +38,11 @@ def validate_image_file(image):
             raise ValidationError(f'Format file {ext} tidak didukung. Gunakan JPG, JPEG, PNG, GIF, atau WebP')
 
 
-def validate_slug_format(slug):
-    """Validasi format slug"""
-    # Pola regex untuk slug (hanya huruf, angka, tanda hubung, dan underscore)
-    pattern = r'^[a-z0-9_-]+$'
-    # Cek apakah slug cocok dengan pola
-    if not re.match(pattern, slug):
-        # Jika tidak cocok, raise ValidationError
-        raise ValidationError('Slug hanya boleh berisi huruf kecil, angka, tanda hubung, dan underscore')
+# def validate_slug_format(slug):
+#     """Validasi format slug"""
+#     # Pola regex untuk slug (hanya huruf, angka, tanda hubung, dan underscore)
+#     pattern = r'^[a-z0-9_-]+$'
+#     # Cek apakah slug cocok dengan pola
+#     if not re.match(pattern, slug):
+#         # Jika tidak cocok, raise ValidationError
+#         raise ValidationError('Slug hanya boleh berisi huruf kecil, angka, tanda hubung, dan underscore')

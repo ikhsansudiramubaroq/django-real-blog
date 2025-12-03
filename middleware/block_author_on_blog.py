@@ -7,6 +7,7 @@ class BlockAuthorOnBlogMiddleware:
     """
     def __init__(self, get_response):
         self.get_response = get_response
+        
     def __call__(self, request):
         user = request.user
         
@@ -14,18 +15,11 @@ class BlockAuthorOnBlogMiddleware:
         if not user.is_authenticated:
             return self.get_response(request)
         
-        # jika role bukan author → biarkan akses normal
-        if hasattr(user, 'role') and user.role != "author":
-            return self.get_response(request)
+        # Cek role = author
+        if getattr(user, "role", "") == "author":
+
+            # Path root "/" atau mulai dengan "/blog/"
+            if request.path == "/" or request.path.startswith("/blog/"):
+                return redirect(reverse("author:author_index"))
         
-        # Jika author, periksa apakah URL yang diakses adalah blog publik
-        blog_paths = [
-            "/blog/",
-        ]
-
-        # Cek apakah request path dimulai dengan salah satu blog paths
-        if any(request.path.startswith(path) for path in blog_paths):
-            # redirect author ke dashboard
-            return redirect(reverse("accounts:author_dashboard"))
-
         return self.get_response(request)
