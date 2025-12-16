@@ -25,10 +25,10 @@
                                         {% for post in get_draft_post %}
                                             <tr>
                                                 <td> {{ forloop.counter }} </td>
-                                                <td> {{ post.title_post }} </td>
+                                                <td> <a href="{% url 'author:detail_post' post.slug_post %}"> {{ post.title_post }} </a></td>
                                                 <td> {{ post.category }} </td>
-                                                <td> {{ post.status }} </td>
-                                                <td> Ubah </td>
+                                                <td><span class="badge badge-warning"> {{ post.status }} </span></td>
+                                                <td> <a href="{% url 'author:edit_post' post.slug_post %}" class="btn btn-success">Edit</a></td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>

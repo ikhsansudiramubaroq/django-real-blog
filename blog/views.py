@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404
 from .models import *
 from django.core.paginator import Paginator
 from django.db.models import Count, F, Q
+from django.utils import timezone
+
 from taggit.models import Tag
 from .forms import CommentsForm
 
@@ -97,7 +99,10 @@ def detail_post(request, slug_post):
     )
 
     # Tambahkan counter views (opsional, efisien di PostgreSQL)
-    Post.objects.filter(pk=detail_post.pk).update(views=F('views') + 1)
+    Post.objects.filter(pk=detail_post.pk).update(
+        views=F('views') + 1,
+        weekly_views=F('weekly_views') + 1,
+        update=timezone.now())
 
     # ambil comment sesuai dengan postingan terkait
     comment_post = Comment.objects.filter(post=detail_post, reply=None).order_by('-timestamp')

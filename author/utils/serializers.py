@@ -1,5 +1,5 @@
-# serializers.py - Fungsi-fungsi untuk mengubah data ke format yang bisa dikirim ke template atau API
-
+# serializers.py - Fungsi-fungsi untuk mengubah data ke format yang bisa dikirim ke template atau API    
+        
 def serialize_post(post):
     """Konversi objek post ke format dictionary untuk dikirim ke template"""
     # Ambil tags terlebih dahulu karna relasi many to many

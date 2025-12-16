@@ -2,25 +2,62 @@ from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-
+from django.http import HttpResponseForbidden
 # Import Form dari file forms.py di aplikasi yang sama
 from .forms import PostForm
 from blog.forms import CommentsForm
-
 # import fungsi pada models
 from django.db.models import Count, F, Q
-
 # import models
 from .models import AuthorProfile
 from blog.models import Post, Comment
-
 # import json
 import json
-
 # Import fungsi-fungsi dari utils
 from .utils.services import get_author_stats, get_total_views,get_author_comments_count, get_published_posts, get_draft_posts, get_author_comments,get_recent_comment, get_view_author_data, update_user_profile, update_profile_picture, is_author
 
+# DRF
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
 
+# Import serializers
+from . import serializers
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def dashboard_api_view(request):
+    # Your dashboard logic using services
+    stats = get_author_stats(request.user)
+
+    data = {
+        'stats': stats,
+        'comment_count': get_author_comments_count(request.user),
+        'recent_comment': get_recent_comment(request.user),
+        'total_views': get_total_views(request.user)
+    }
+
+    # For now, return the raw data since the serializer expects instances, not raw data
+    return Response(data)
+
+# API endpoint for creating posts
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_post_api(request):
+    serializer = serializers.PostCreateSerializer(data=request.data, context={'request': request})
+    if serializer.is_valid():
+        post = serializer.save()
+        return Response({
+            'success': True,
+            'message': 'Post created successfully',
+            'post_id': post.id
+        }, status=status.HTTP_201_CREATED)
+    else:
+        return Response({
+            'success': False,
+            'errors': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
 
 # index author (dashboard)
 # FUNGSI CEK AUTHOR
@@ -32,7 +69,7 @@ def author_index(request):
     comment_count = get_author_comments_count(user)  # Panggil fungsi untuk mendapatkan jumlah komentar dari utils
     recent_comment = get_recent_comment(user)  # Panggil fungsi untuk mendapatkan jumlah komentar dari utils
     total_views = get_total_views(user)
-    context = {  
+    context = {
         'title' : 'Dashboard Author',
         'stats': stats,  # Tambahkan statistik ke konteks
         'comment_count': comment_count,  # Tambahkan jumlah komentar ke konteks
@@ -70,38 +107,38 @@ def draft_post(request):
 def create_post(request):
     if request.method == 'POST':  # Cek jika metode request adalah POST
         # Instansiasi form dengan data POST dan request.FILES (penting untuk ImageField)
-        form = PostForm(request.POST, request.FILES) 
-        if form.is_valid():  
-            new_post = form.save(commit=False)  
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            new_post = form.save(commit=False)
             new_post.user = request.user  # Set user yang sedang login sebagai pemilik post
-            new_post.save()  
+            new_post.save()
             form.save_m2m()  # Simpan hubungan many-to-many dari form
             return redirect('author:list_post')  # Redirect ke halaman list_post
-    else:  
-        form = PostForm()  
-    context = {  
-        'title': 'Buat Postingan Baru',  
-        'form': form  
+    else:
+        form = PostForm()
+    context = {
+        'title': 'Buat Postingan Baru',
+        'form': form
     }
     return render(request, 'author/create_post.html', context)  # Render template dengan konteks
 
 
 # === FUNGSI EDIT POST ===
 @login_required
-@user_passes_test(is_author, login_url='blog:blog_index')  
+@user_passes_test(is_author, login_url='blog:blog_index')
 def edit_post(request, slug_post):
     get_post = Post.objects.get(slug_post = slug_post)
     if request.method == 'POST':  # Cek jika metode request adalah POST
         form = PostForm(request.POST, request.FILES, instance=get_post)  # Buat instance PostForm dengan data POST dan file
-        if form.is_valid():  
-            new_post = form.save(commit=False)  
+        if form.is_valid():
+            new_post = form.save(commit=False)
             new_post.user = request.user  # Set user yang sedang login sebagai pemilik post
-            new_post.save()  
-            form.save_m2m()  
+            new_post.save()
+            form.save_m2m()
             return redirect('author:list_post')  # Redirect ke halaman index author
-    else:  
+    else:
         form = PostForm(instance=get_post)  # Buat instance PostForm berisi instance 'get_post'
-    context = { 
+    context = {
         'title': 'Edit Post',  # Tambahkan judul ke konteks
         'form': form  # Tambahkan form ke konteks
     }
@@ -109,7 +146,7 @@ def edit_post(request, slug_post):
 
 # detail view post
 @login_required
-@user_passes_test(is_author, login_url='blog:blog_index')  
+@user_passes_test(is_author, login_url='blog:blog_index')
 def detail_post(request, slug_post):
     # Ambil satu post berdasarkan slug dengan relasi category, user, dan tags
     detail_post = get_object_or_404(
@@ -120,7 +157,7 @@ def detail_post(request, slug_post):
     # Akses hanya untuk pemilik post
     if request.user != detail_post.user:
         return redirect('author:list_post')
-    
+
     # Ambil semua tag yang terkait dengan postingan ini
     tags = detail_post.tags.all()
 
@@ -175,7 +212,7 @@ def detail_post(request, slug_post):
         'comments' : comment_post,
         'slug_author': slug_author,
     }
-    
+
     return render (request, 'author/detail_view_post.html', context)
 
 
@@ -201,7 +238,7 @@ def profile_update(request):
     try:
         # Parse incoming JSON data
         data = json.loads(request.body)  # Ambil data JSON dari body request
-        result = update_user_profile(request, data) 
+        result = update_user_profile(request, data)
         return JsonResponse(result)  # Kembalikan hasil dalam bentuk JSON
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})  # Kembalikan error jika terjadi exception
@@ -234,6 +271,19 @@ def comment_author(request):
         'get_comment': get_comment,  # Tambahkan komentar ke konteks
     }
     return render(request, 'author/author_comment.html', context)  # Render template dengan konteks
+
+@login_required
+@user_passes_test(is_author, login_url='blog:blog_index')
+def delete_comment (request):
+    comment_id = request.POST.get("comment_id")
+    get_comment = get_object_or_404(Comment, id=comment_id)
+
+    # Cek apakah penghapus adalah author post pemilik comment
+    if get_comment.post.user != request.user:
+        return HttpResponseForbidden("Kamu tidak punya akses untuk hapus komentar ini!")
+    get_comment.delete()
+    return redirect("author:author_comment")
+
 # END DASHBOARD AUTHOR
 
 

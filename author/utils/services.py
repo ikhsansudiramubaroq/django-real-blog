@@ -85,13 +85,20 @@ def get_recent_comment(user):
 
 def get_total_views(user):
     views_one_week_ago = timezone.now() - timedelta(days=7)
+    # 1️⃣ Reset weekly_views untuk post yang sudah lewat seminggu
+    Post.objects.filter(
+        user=user,
+        update__lt=views_one_week_ago
+    ).update(weekly_views=0)
+    # hitung total views
     total_views = Post.objects.filter(user=user).aggregate(total =Sum('views'))
+    # views week
     views_week = Post.objects.filter(
         user = user,
         update__gte = views_one_week_ago
-    ).aggregate(week = Sum('views'))
+    ).aggregate(weekly = Sum('weekly_views'))
 
-    return {'total':total_views['total'] or 0 ,'week': views_week['week'] or 0}
+    return {'total':total_views['total'] or 0 ,'week': views_week['weekly'] or 0}
 
 def get_view_author_data(request, slug_author):
     """Mengambil data untuk halaman view author"""

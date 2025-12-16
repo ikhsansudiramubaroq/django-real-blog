@@ -40,6 +40,29 @@
         </div>
     </div>
 
+    <div class="modal fade" id="deleteCommentModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <form method="POST" id="deleteCommentForm" action="{% url 'author:delete_comment' %}">
+            {% csrf_token %}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Delete Comment?</h5>
+                    <button class="close" data-dismiss="modal">×</button>
+                </div>
+                <div class="modal-body">
+                    Komentar akan dihapus secara permanen.
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="comment_id" id="commentIdInput">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Delete</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
 
     <script src="{% static 'author/vendor/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'author/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
@@ -59,6 +82,13 @@
     $(document).ready(function() {
         $('#dataTable').DataTable();
     });
+
+    
+    $('#deleteCommentModal').on('show.bs.modal', function (event) {
+    const commentId = $(event.relatedTarget).data('id')
+    $('#commentIdInput').val(commentId)
+    })
+
     </script>
     
 

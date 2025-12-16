@@ -37,6 +37,7 @@ class Post(models.Model):
         blank=True
         )
     views = models.IntegerField(default=0)
+    weekly_views = models.PositiveIntegerField(default=0)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='published')
     title_post = models.CharField(max_length=250)
     fill = models.TextField()

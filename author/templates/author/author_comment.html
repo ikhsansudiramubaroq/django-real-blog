@@ -25,10 +25,19 @@
                                         {% for comment in get_comment %}
                                             <tr>
                                                 <td> {{ forloop.counter }} </td>
-                                                <td> {{ comment.post.title_post }} </td>
+                                                <td> <a href="{% url 'author:detail_post' comment.post.slug_post %}"> 
+                                                    {{ comment.post.title_post }} </a> 
+                                                </td>
                                                 <td> {{ comment.user.nama }} </td>
                                                 <td> {{ comment.comments }} </td>
-                                                <td> Hapus </td>
+                                                <td><button type="button" 
+                                                            class="btn btn-danger" 
+                                                            data-toggle="modal" 
+                                                            data-target="#deleteCommentModal"
+                                                            data-id="{{ comment.id }}">
+                                                        Hapus
+                                                    </button>
+                                                </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
