@@ -21,8 +21,18 @@ class Category(models.Model):
     def __str__(self):
         return self.title_cat
     
+# Manager custom untuk Post
+class PostManager(models.Manager):
+    def published(self):
+        return self.filter(status='published')
+
+    def popular(self):
+        return self.published().order_by('-views')
+
 # class untuk postingan blog
 class Post(models.Model):
+    # Gunakan custom manager
+    objects = PostManager()
     STATUS_CHOICES = (
         ('draft', 'Draft'),
         ('published', 'Published'),
@@ -31,11 +41,6 @@ class Post(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     tags = TaggableManager()
-    likes = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
-        related_name='post_likes',
-        blank=True
-        )
     views = models.IntegerField(default=0)
     weekly_views = models.PositiveIntegerField(default=0)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='published')

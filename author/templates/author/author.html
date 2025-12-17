@@ -75,7 +75,8 @@
 
                     <div class="row mt-4">
                         <!-- Article From Author -->
-                        {% for post in serialize_post  %}
+                        <!-- Article From Author -->
+                        {% for post in posts  %}
                         <div class="col-md-6 mb-4" data-aos="fade-up">
                             <div class="article-card">
                                 <div class="position-relative">
@@ -94,12 +95,12 @@
                                     <div class="article-footer d-flex justify-content-between align-items-center">
                                         <a href="{% url 'blog:detail_post' post.slug_post %}" class="btn-read-more">Read More</a>
                                         <div class="article-tags">
-                                            {% for tag in post.tags|slice:":1" %}
+                                            {% for tag in post.tags.all|slice:":1" %}
                                                 <span class="badge bg-light text-dark me-1">{{ tag }}</span>
                                             {% endfor %}
-                                            {% if post.tags|length > 1 %}
+                                            {% if post.tags.all|length > 1 %}
                                                 <span class="badge bg-secondary text-white me-1">
-                                                    {{ post.tags|length|add:"-1" }} lainnya
+                                                    {{ post.tags.all|length|add:"-1" }} lainnya
                                                 </span>
                                             {% endif %}
                                         </div>
