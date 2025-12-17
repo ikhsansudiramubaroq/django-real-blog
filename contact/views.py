@@ -5,7 +5,7 @@ from .forms import ContactForm
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.conf import settings
 
-def Contact(request):
+def contact_view(request):
     if request.method == "POST":
         form = ContactForm(request.POST)
         
